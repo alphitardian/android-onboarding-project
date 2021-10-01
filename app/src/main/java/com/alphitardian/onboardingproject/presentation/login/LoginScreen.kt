@@ -8,7 +8,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.alphitardian.onboardingproject.R
 
 @Composable
 fun LoginScreen() {
@@ -32,7 +35,11 @@ fun LoginScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "TimeRomanNews.", style = TextStyle(fontSize = 28.sp))
+            Text(
+                text = "TimeRomanNews.",
+                style = TextStyle(fontSize = 28.sp),
+                fontFamily = FontFamily.Serif
+            )
             Spacer(modifier = Modifier.height(94.dp))
             TextInputField(
                 title = "Email",
@@ -74,7 +81,7 @@ fun TextInputField(
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title)
+        Text(text = title, color = Color.Gray)
         TextField(
             value = value,
             onValueChange = onValueChange,
@@ -87,6 +94,14 @@ fun TextInputField(
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Email
             ),
+            trailingIcon = {
+                if (isPassword) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_visibility_off_24),
+                        contentDescription = "Show password Icon"
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }
