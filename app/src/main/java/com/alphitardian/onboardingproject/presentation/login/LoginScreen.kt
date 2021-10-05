@@ -42,7 +42,7 @@ fun LoginScreen() {
             )
             Spacer(modifier = Modifier.height(94.dp))
             TextInputField(
-                title = stringResource(R.string.email_label),
+                title = stringResource(R.string.label_email),
                 isPassword = false,
                 value = email,
                 onValueChange = { value ->
@@ -50,7 +50,7 @@ fun LoginScreen() {
                 })
             Spacer(modifier = Modifier.height(53.dp))
             TextInputField(
-                title = stringResource(R.string.password_label),
+                title = stringResource(R.string.label_password),
                 isPassword = true,
                 value = password,
                 onValueChange = { value ->
@@ -58,12 +58,12 @@ fun LoginScreen() {
                 })
             Spacer(modifier = Modifier.height(53.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { /* TODO: Navigate to home screen */ },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.login_button),
+                    text = stringResource(R.string.button_login),
                     style = TextStyle(fontWeight = FontWeight.Bold),
                     color = Color.White,
                     modifier = Modifier.padding(4.dp)

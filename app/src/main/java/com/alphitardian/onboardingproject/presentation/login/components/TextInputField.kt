@@ -22,7 +22,7 @@ fun TextInputField(
     title: String,
     isPassword: Boolean,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title, color = Color.Gray)
@@ -33,7 +33,7 @@ fun TextInputField(
             placeholder = {
                 Text(
                     text = String.format(
-                        stringResource(id = R.string.textfield_placeholder),
+                        stringResource(id = R.string.hint_login_input_field),
                         title.lowercase()
                     )
                 )
@@ -47,7 +47,7 @@ fun TextInputField(
                 if (isPassword) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_visibility_off_24),
-                        contentDescription = stringResource(R.string.password_icon_contentdescription)
+                        contentDescription = stringResource(R.string.content_description_password_visibility_icon)
                     )
                 }
             },
