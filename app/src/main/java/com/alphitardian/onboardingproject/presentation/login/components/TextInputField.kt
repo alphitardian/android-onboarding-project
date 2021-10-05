@@ -33,7 +33,7 @@ fun TextInputField(
             placeholder = {
                 Text(
                     text = String.format(
-                        stringResource(id = R.string.hint_login_input_field),
+                        stringResource(id = R.string.hint_login_input),
                         title.lowercase()
                     )
                 )
@@ -47,7 +47,7 @@ fun TextInputField(
                 if (isPassword) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_visibility_off_24),
-                        contentDescription = stringResource(R.string.content_description_password_visibility_icon)
+                        contentDescription = stringResource(R.string.content_description_visibility_icon)
                     )
                 }
             },

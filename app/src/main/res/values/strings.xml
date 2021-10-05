@@ -4,6 +4,6 @@
     <string name="label_email">Email</string>
     <string name="label_password">Password</string>
     <string name="button_login">Login</string>
-    <string name="hint_login_input_field">Type your %1$s here</string>
-    <string name="content_description_password_visibility_icon">Show password Icon</string>
+    <string name="hint_login_input">Type your %1$s here</string>
+    <string name="content_description_visibility_icon">Show password Icon</string>
 </resources>
