@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Onboarding Project</string>
+    <string name="title">TimeRomanNews.</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="login_button">Login</string>
+    <string name="textfield_placeholder">Type your %1$s here</string>
+    <string name="password_icon_contentdescription">Show password Icon</string>
 </resources>

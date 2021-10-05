@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -30,7 +31,12 @@ fun TextInputField(
             onValueChange = onValueChange,
             singleLine = true,
             placeholder = {
-                Text(text = "Type your ${title.lowercase()} here")
+                Text(
+                    text = String.format(
+                        stringResource(id = R.string.textfield_placeholder),
+                        title.lowercase()
+                    )
+                )
             },
             colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
             visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
@@ -41,7 +47,7 @@ fun TextInputField(
                 if (isPassword) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_visibility_off_24),
-                        contentDescription = "Show password Icon"
+                        contentDescription = stringResource(R.string.password_icon_contentdescription)
                     )
                 }
             },

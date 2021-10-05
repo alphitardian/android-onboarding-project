@@ -10,12 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.presentation.login.components.TextInputField
 
 @Composable
@@ -34,13 +36,13 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "TimeRomanNews.",
+                text = stringResource(R.string.title),
                 style = TextStyle(fontSize = 28.sp),
                 fontFamily = FontFamily.Serif
             )
             Spacer(modifier = Modifier.height(94.dp))
             TextInputField(
-                title = "Email",
+                title = stringResource(R.string.email_label),
                 isPassword = false,
                 value = email,
                 onValueChange = { value ->
@@ -48,7 +50,7 @@ fun LoginScreen() {
                 })
             Spacer(modifier = Modifier.height(53.dp))
             TextInputField(
-                title = "Password",
+                title = stringResource(R.string.password_label),
                 isPassword = true,
                 value = password,
                 onValueChange = { value ->
@@ -61,7 +63,7 @@ fun LoginScreen() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Login",
+                    text = stringResource(R.string.login_button),
                     style = TextStyle(fontWeight = FontWeight.Bold),
                     color = Color.White,
                     modifier = Modifier.padding(4.dp)
