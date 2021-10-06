@@ -36,7 +36,7 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.title),
+                text = stringResource(R.string.login_title),
                 style = TextStyle(fontSize = 28.sp),
                 fontFamily = FontFamily.Serif
             )
