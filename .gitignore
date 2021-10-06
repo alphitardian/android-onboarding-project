@@ -7,9 +7,14 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/misc.xml
+/.idea/codeStyles
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+keystore.properties
+/app/upload-keystore.jks
+/app/release
