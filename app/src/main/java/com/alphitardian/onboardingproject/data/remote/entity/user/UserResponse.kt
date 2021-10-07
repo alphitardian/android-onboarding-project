@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.remote.entity
+package com.alphitardian.onboardingproject.data.remote.entity.user
 
 data class UserResponse(
     val username: String,

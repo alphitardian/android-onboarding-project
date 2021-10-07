@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.remote.entity
+package com.alphitardian.onboardingproject.data.remote.entity.news
 
 import com.google.gson.annotations.SerializedName
 
