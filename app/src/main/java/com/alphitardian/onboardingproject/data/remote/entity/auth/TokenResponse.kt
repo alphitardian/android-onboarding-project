@@ -1,10 +1,12 @@
 package com.alphitardian.onboardingproject.data.remote.entity.auth
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TokenResponse(
     val token: String,
     val scheme: String,
-    @SerializedName("expires_at")
+    @SerialName("expires_at")
     val expiresTime: String,
 )
