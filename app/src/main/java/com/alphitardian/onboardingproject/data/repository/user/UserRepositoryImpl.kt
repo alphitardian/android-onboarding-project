@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.repository
+package com.alphitardian.onboardingproject.data.repository.user
 
 import com.alphitardian.onboardingproject.data.remote.api.UserApi
 import com.alphitardian.onboardingproject.data.remote.entity.news.NewsResponse

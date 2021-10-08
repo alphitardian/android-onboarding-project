@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.repository
+package com.alphitardian.onboardingproject.data.repository.auth
 
 import com.alphitardian.onboardingproject.data.remote.api.AuthApi
 import com.alphitardian.onboardingproject.data.remote.entity.auth.LoginRequest
