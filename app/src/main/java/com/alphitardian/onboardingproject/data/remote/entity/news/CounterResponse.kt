@@ -7,8 +7,13 @@ import kotlinx.serialization.Serializable
 data class CounterResponse(
     @SerialName("upvote")
     val upVote: Int,
+
     @SerialName("downvote")
     val downVote: Int,
+
+    @SerialName("comment")
     val comment: Int,
+
+    @SerialName("view")
     val view: Int,
 )
