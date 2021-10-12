@@ -1,7 +1,7 @@
-package com.alphitardian.onboardingproject.data.remote.api
+package com.alphitardian.onboardingproject.data.user.data_source.remote.network
 
-import com.alphitardian.onboardingproject.data.remote.entity.news.NewsResponse
-import com.alphitardian.onboardingproject.data.remote.entity.user.UserResponse
+import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
+import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 

@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.remote.entity.auth
+package com.alphitardian.onboardingproject.data.auth.data_source.remote.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

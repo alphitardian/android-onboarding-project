@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.remote.entity.news
+package com.alphitardian.onboardingproject.data.user.data_source.remote.response.news
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

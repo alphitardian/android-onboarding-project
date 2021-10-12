@@ -1,4 +1,4 @@
-package com.alphitardian.onboardingproject.data.remote.entity.user
+package com.alphitardian.onboardingproject.data.user.data_source.remote.response.user
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

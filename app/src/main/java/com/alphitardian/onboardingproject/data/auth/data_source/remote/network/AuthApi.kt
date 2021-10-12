@@ -1,7 +1,7 @@
-package com.alphitardian.onboardingproject.data.remote.api
+package com.alphitardian.onboardingproject.data.auth.data_source.remote.network
 
-import com.alphitardian.onboardingproject.data.remote.entity.auth.LoginRequest
-import com.alphitardian.onboardingproject.data.remote.entity.auth.TokenResponse
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
