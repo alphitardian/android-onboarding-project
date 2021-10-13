@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.network.UserApi
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
@@ -15,10 +16,11 @@ class RemoteDataSource(private val userApi: UserApi) {
 
         when {
             response.isSuccessful -> {
-                result.postValue(Resource.Success<UserResponse>(data = response.body()!!))
+                result.postValue(response.body()
+                    ?.let { Resource.Success<UserResponse>(data = it) })
             }
-            response.code() == 401 -> {
-                result.postValue(Resource.Error<UserResponse>(state = ErrorState.ERROR_401))
+            else -> {
+                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
             }
         }
 
@@ -31,10 +33,11 @@ class RemoteDataSource(private val userApi: UserApi) {
 
         when {
             response.isSuccessful -> {
-                result.postValue(Resource.Success<NewsResponse>(data = response.body()!!))
+                result.postValue(response.body()
+                    ?.let { Resource.Success<NewsResponse>(data = it) })
             }
-            response.code() == 401 -> {
-                result.postValue(Resource.Error<NewsResponse>(state = ErrorState.ERROR_401))
+            else -> {
+                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
             }
         }
 

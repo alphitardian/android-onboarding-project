@@ -7,6 +7,7 @@ import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.network.AuthApi
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
+import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 
 class RemoteDataSource(private val authApi: AuthApi) {
     suspend fun loginUser(requestBody: LoginRequest): LiveData<Resource<TokenResponse>> {
@@ -15,16 +16,11 @@ class RemoteDataSource(private val authApi: AuthApi) {
 
         when {
             response.isSuccessful -> {
-                result.postValue(Resource.Success<TokenResponse>(data = response.body()!!))
+                result.postValue(response.body()
+                    ?.let { Resource.Success<TokenResponse>(data = it) })
             }
-            response.code() == 400 -> {
-                result.postValue(Resource.Error<TokenResponse>(state = ErrorState.ERROR_400))
-            }
-            response.code() == 401 -> {
-                result.postValue(Resource.Error<TokenResponse>(state = ErrorState.ERROR_401))
-            }
-            response.code() == 422 -> {
-                result.postValue(Resource.Error<TokenResponse>(state = ErrorState.ERROR_422))
+            else -> {
+                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
             }
         }
 
@@ -37,10 +33,11 @@ class RemoteDataSource(private val authApi: AuthApi) {
 
         when {
             response.isSuccessful -> {
-                result.postValue(Resource.Success<TokenResponse>(data = response.body()!!))
+                result.postValue(response.body()
+                    ?.let { Resource.Success<TokenResponse>(data = it) })
             }
-            response.code() == 401 -> {
-                result.postValue(Resource.Error<TokenResponse>(state = ErrorState.ERROR_401))
+            else -> {
+                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
             }
         }
 
