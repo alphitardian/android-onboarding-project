@@ -20,7 +20,7 @@ class RemoteDataSource(private val authApi: AuthApi) {
                     ?.let { Resource.Success<TokenResponse>(data = it) })
             }
             else -> {
-                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
+                result.postValue(Resource.Error(state = ErrorState.fromRawValue(response.code())))
             }
         }
 
@@ -37,7 +37,7 @@ class RemoteDataSource(private val authApi: AuthApi) {
                     ?.let { Resource.Success<TokenResponse>(data = it) })
             }
             else -> {
-                result.postValue(Resource.Error(state = ErrorState.fromErrorCode(response.code())))
+                result.postValue(Resource.Error(state = ErrorState.fromRawValue(response.code())))
             }
         }
 

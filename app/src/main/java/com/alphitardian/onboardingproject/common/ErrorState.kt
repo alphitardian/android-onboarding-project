@@ -6,14 +6,5 @@ enum class ErrorState(val code: Int) {
     ERROR_422(422),
     ERROR_UNKNOWN(0);
 
-    companion object {
-        fun fromErrorCode(code: Int): ErrorState {
-            values().forEach {
-                when (it.code) {
-                    code -> return it
-                }
-            }
-            return ERROR_UNKNOWN
-        }
-    }
+    companion object : EnumCompanion<Int, ErrorState>(values().associateBy(ErrorState::code))
 }
