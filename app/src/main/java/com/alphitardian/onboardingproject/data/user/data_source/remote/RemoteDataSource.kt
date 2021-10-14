@@ -7,8 +7,9 @@ import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.network.UserApi
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
+import javax.inject.Inject
 
-class RemoteDataSource(private val userApi: UserApi) {
+class RemoteDataSource @Inject constructor(private val userApi: UserApi) {
     suspend fun getProfile(userToken: String): LiveData<Resource<UserResponse>> {
         val result = MutableLiveData<Resource<UserResponse>>()
         val response = userApi.getUserProfile(userToken)

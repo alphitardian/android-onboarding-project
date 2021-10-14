@@ -7,8 +7,9 @@ import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.network.AuthApi
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
+import javax.inject.Inject
 
-class RemoteDataSource(private val authApi: AuthApi) {
+class RemoteDataSource @Inject constructor(private val authApi: AuthApi) {
     suspend fun loginUser(requestBody: LoginRequest): LiveData<Resource<TokenResponse>> {
         val result = MutableLiveData<Resource<TokenResponse>>()
         val response = authApi.loginUser(requestBody)

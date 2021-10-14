@@ -8,8 +8,9 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.network.U
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import retrofit2.Response
+import javax.inject.Inject
 
-class UserRepositoryImpl(private val remoteDataSource: RemoteDataSource) : UserRepository {
+class UserRepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource) : UserRepository {
     override suspend fun getUserProfile(userToken: String): LiveData<Resource<UserResponse>> {
         return remoteDataSource.getProfile(userToken)
     }
