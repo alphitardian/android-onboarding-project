@@ -1,6 +1,7 @@
 package com.alphitardian.onboardingproject.di
 
 import com.alphitardian.onboardingproject.data.auth.repository.AuthRepositoryImpl
+import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
 import com.alphitardian.onboardingproject.data.user.repository.UserRepositoryImpl
 import com.alphitardian.onboardingproject.domain.repository.AuthRepository
 import com.alphitardian.onboardingproject.domain.repository.UserRepository
@@ -23,7 +24,10 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(remoteDataSource: UserRemoteDataSource): UserRepository {
+    fun provideUserRepository(
+        remoteDataSource: UserRemoteDataSource,
+        localDataSource: LocalDataSource,
+    ): UserRepository {
         return UserRepositoryImpl(remoteDataSource)
     }
 }
