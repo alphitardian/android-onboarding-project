@@ -5,12 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,10 +48,18 @@ fun NewsCardItem() {
                     style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.W700),
                     modifier = Modifier.padding(top = 8.dp))
                 Row(Modifier.padding(top = 11.dp)) {
-                    CounterItem(icon = Icons.Default.Check, iconDescription = "", counter = "0")
-                    CounterItem(icon = Icons.Outlined.Check, iconDescription = "", counter = "0")
-                    CounterItem(icon = Icons.Outlined.Check, iconDescription = "", counter = "0")
-                    CounterItem(icon = Icons.Outlined.Check, iconDescription = "", counter = "0")
+                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_visibility_counter_24),
+                        iconDescription = stringResource(id = R.string.content_description_view_icon),
+                        counter = "0")
+                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_chat_counter_24),
+                        iconDescription = stringResource(id = R.string.content_description_comment_icon),
+                        counter = "0")
+                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_up_counter_24),
+                        iconDescription = stringResource(id = R.string.content_description_like_icon),
+                        counter = "0")
+                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_down_counter_24),
+                        iconDescription = stringResource(id = R.string.content_description_dislike_icon),
+                        counter = "0")
                 }
             }
         }

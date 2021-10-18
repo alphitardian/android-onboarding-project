@@ -8,6 +8,10 @@
     <string name="content_description_visibility_icon">Show password Icon</string>
     <string name="content_description_profile_image">User profile image</string>
     <string name="content_description_news_image">News image</string>
+    <string name="content_description_view_icon">News Views Icon</string>
+    <string name="content_description_comment_icon">News Comments Icon</string>
+    <string name="content_description_like_icon">News Likes Icon</string>
+    <string name="content_description_dislike_icon">News Dislikes Icon</string>
     <string name="placeholder_home_user_fullname">Full Name</string>
     <string name="placeholder_home_user_bio">User Profile Bio</string>
     <string name="placeholder_home_user_web">www.example.com</string>
