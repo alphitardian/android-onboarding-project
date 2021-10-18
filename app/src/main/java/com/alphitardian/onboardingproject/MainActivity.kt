@@ -11,7 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.alphitardian.onboardingproject.presentation.home.HomeScreen
 import com.alphitardian.onboardingproject.presentation.login.LoginScreen
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
