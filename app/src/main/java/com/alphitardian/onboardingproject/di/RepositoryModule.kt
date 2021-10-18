@@ -28,6 +28,6 @@ object RepositoryModule {
         remoteDataSource: UserRemoteDataSource,
         localDataSource: LocalDataSource,
     ): UserRepository {
-        return UserRepositoryImpl(remoteDataSource)
+        return UserRepositoryImpl(remoteDataSource, localDataSource)
     }
 }
