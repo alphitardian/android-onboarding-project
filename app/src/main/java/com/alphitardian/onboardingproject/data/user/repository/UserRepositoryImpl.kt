@@ -3,14 +3,16 @@ package com.alphitardian.onboardingproject.data.user.repository
 import androidx.lifecycle.LiveData
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.RemoteDataSource
-import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import com.alphitardian.onboardingproject.data.user.data_source.remote.network.UserApi
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
-import retrofit2.Response
+import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource) : UserRepository {
+class UserRepositoryImpl @Inject constructor(userApi: UserApi) : UserRepository {
+
+    private val remoteDataSource: RemoteDataSource = RemoteDataSource(userApi)
+
     override suspend fun getUserProfile(userToken: String): LiveData<Resource<UserResponse>> {
         return remoteDataSource.getProfile(userToken)
     }
