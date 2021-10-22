@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,25 +28,30 @@ fun NewsCardItem() {
             .fillMaxWidth()
             .padding(bottom = 16.dp)) {
         Column {
-            Image(
-                painter = rememberImagePainter(data = newsImagePlaceholder),
-                contentDescription = stringResource(id = R.string.content_description_news_image),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(161.dp)
-                    .background(color = Color.Gray)
-            )
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(161.dp)) {
+                Image(
+                    painter = rememberImagePainter(data = newsImagePlaceholder),
+                    contentDescription = stringResource(id = R.string.content_description_news_image),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.Gray)
+                )
+            }
             Column(modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp)) {
                 Row(horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()) {
                     Text(text = stringResource(id = R.string.placeholder_card_category),
-                        style = TextStyle(color = Color.Blue, fontSize = 12.sp))
+                        style = TextStyle(color = MaterialTheme.colors.secondary, fontSize = 12.sp))
                     Text(text = stringResource(id = R.string.placeholder_card_date),
                         style = TextStyle(color = Color.Gray, fontSize = 12.sp))
                 }
                 Text(text = stringResource(id = R.string.placeholder_card_news),
                     maxLines = 2,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.W700),
+                    style = TextStyle(fontSize = 14.sp,
+                        fontWeight = FontWeight.W700,
+                        color = MaterialTheme.colors.onBackground),
                     modifier = Modifier.padding(top = 8.dp))
                 Row(Modifier.padding(top = 11.dp)) {
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_visibility_counter_24),
