@@ -8,16 +8,18 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.response.
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) : UserRepository {
-    override suspend fun getUserProfile(userToken: String): LiveData<Resource<UserResponse>> {
+    override suspend fun getUserProfile(userToken: String): Resource<UserResponse> {
         return remoteDataSource.getProfile(userToken)
     }
 
-    override suspend fun getNews(userToken: String): LiveData<Resource<NewsResponse>> {
+    override suspend fun getNews(userToken: String): Resource<NewsResponse> {
         return remoteDataSource.getNews(userToken)
     }
 }

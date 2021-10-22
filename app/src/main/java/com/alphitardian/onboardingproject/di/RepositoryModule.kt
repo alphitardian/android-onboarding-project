@@ -5,29 +5,17 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataS
 import com.alphitardian.onboardingproject.data.user.repository.UserRepositoryImpl
 import com.alphitardian.onboardingproject.domain.repository.AuthRepository
 import com.alphitardian.onboardingproject.domain.repository.UserRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
-import com.alphitardian.onboardingproject.data.auth.data_source.remote.RemoteDataSource as AuthRemoteDataSource
-import com.alphitardian.onboardingproject.data.user.data_source.remote.RemoteDataSource as UserRemoteDataSource
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
-    @Provides
-    @Singleton
-    fun provideAuthRepository(remoteDataSource: AuthRemoteDataSource): AuthRepository {
-        return AuthRepositoryImpl(remoteDataSource)
-    }
+abstract class RepositoryModule {
+    @Binds
+    abstract fun bindAuthRepository(authRepository: AuthRepositoryImpl): AuthRepository
 
-    @Provides
-    @Singleton
-    fun provideUserRepository(
-        remoteDataSource: UserRemoteDataSource,
-        localDataSource: LocalDataSource,
-    ): UserRepository {
-        return UserRepositoryImpl(remoteDataSource, localDataSource)
-    }
+    @Binds
+    abstract fun bindUserRepository(userRepository: UserRepositoryImpl): UserRepository
 }
