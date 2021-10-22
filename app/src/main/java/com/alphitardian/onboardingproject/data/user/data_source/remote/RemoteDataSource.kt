@@ -6,6 +6,6 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.response.
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 
 interface RemoteDataSource {
-    suspend fun getProfile(userToken: String): LiveData<Resource<UserResponse>>
-    suspend fun getNews(userToken: String): LiveData<Resource<NewsResponse>>
+    suspend fun getProfile(userToken: String): Resource<UserResponse>
+    suspend fun getNews(userToken: String): Resource<NewsResponse>
 }
