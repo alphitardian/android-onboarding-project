@@ -1,5 +1,7 @@
 package com.alphitardian.onboardingproject.di
 
+import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
+import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindAuthRemoteDataSource(dataSource: AuthDataSourceImpl): AuthDataSource
+
+    @Binds
+    abstract fun bindUserLocalDataSource(localDataSource: LocalDataSourceImpl): LocalDataSource
 }

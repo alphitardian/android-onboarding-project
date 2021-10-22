@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.data.user.repository
 
-import androidx.lifecycle.LiveData
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.RemoteDataSource
