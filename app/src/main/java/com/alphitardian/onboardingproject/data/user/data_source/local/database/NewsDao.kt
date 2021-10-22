@@ -10,7 +10,7 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.entity.New
 @Dao
 interface NewsDao {
     @Query("SELECT * FROM news")
-    fun getNews() : LiveData<List<NewsEntity>>
+    fun getNews() : List<NewsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNews(news: NewsEntity)

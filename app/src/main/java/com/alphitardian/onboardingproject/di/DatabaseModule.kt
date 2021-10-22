@@ -2,7 +2,7 @@ package com.alphitardian.onboardingproject.di
 
 import android.content.Context
 import androidx.room.Room
-import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
+import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSourceImpl
 import com.alphitardian.onboardingproject.data.user.data_source.local.database.NewsDao
 import com.alphitardian.onboardingproject.data.user.data_source.local.database.UserDao
 import com.alphitardian.onboardingproject.database.AppDatabase
@@ -36,6 +36,6 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideLocalDataSource(newsDao: NewsDao, userDao: UserDao): LocalDataSource =
-        LocalDataSource(newsDao, userDao)
+    fun provideLocalDataSource(newsDao: NewsDao, userDao: UserDao): LocalDataSourceImpl =
+        LocalDataSourceImpl(newsDao, userDao)
 }
