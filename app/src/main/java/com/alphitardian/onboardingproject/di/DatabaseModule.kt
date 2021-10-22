@@ -33,9 +33,4 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
-
-    @Provides
-    @Singleton
-    fun provideLocalDataSource(newsDao: NewsDao, userDao: UserDao): LocalDataSourceImpl =
-        LocalDataSourceImpl(newsDao, userDao)
 }
