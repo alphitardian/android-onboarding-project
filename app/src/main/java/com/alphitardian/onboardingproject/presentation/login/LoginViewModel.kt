@@ -29,9 +29,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: UserLoginUseC
             val loginRequest = LoginRequest(password = password.value, username = email.value)
             val result = loginUseCase(loginRequest)
 
-            if (email.value.isNotEmpty() && password.value.isNotEmpty()) {
-                mutableLoginState.postValue(result)
-            }
+            mutableLoginState.postValue(result)
 
             loading.value = false
         }
