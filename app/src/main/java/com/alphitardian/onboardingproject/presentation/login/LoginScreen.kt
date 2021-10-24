@@ -38,7 +38,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colors.surface)
             .padding(20.dp)
     ) {
         Column(
@@ -48,7 +48,8 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
             Text(
                 text = stringResource(R.string.login_title),
                 style = TextStyle(fontSize = 28.sp),
-                fontFamily = FontFamily.Serif
+                fontFamily = FontFamily.Serif,
+                color = MaterialTheme.colors.onBackground
             )
             Spacer(modifier = Modifier.height(94.dp))
             TextInputField(
@@ -69,7 +70,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
             Spacer(modifier = Modifier.height(53.dp))
             Button(
                 onClick = { viewModel.loginUser() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
