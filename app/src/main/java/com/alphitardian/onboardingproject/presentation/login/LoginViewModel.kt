@@ -51,7 +51,7 @@ class LoginViewModel @Inject constructor(
             if (result is Resource.Success) {
                 val time = result.data.expiresTime
                 val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
-                val epoch = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli()/1000
+                val epoch = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
 
                 saveExpiredTime(epoch)
                 encryptToken(result.data.token)
@@ -67,7 +67,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun saveTokenIV(iv : String) {
+    private fun saveTokenIV(iv: String) {
         viewModelScope.launch(Dispatchers.IO) {
             datastore.saveTokenInitializationVector(iv)
         }
