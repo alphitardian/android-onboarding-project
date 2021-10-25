@@ -35,7 +35,7 @@ fun TopBar() {
                 modifier = Modifier.fillMaxHeight()) {
                 Image(
                     painter = rememberImagePainter(
-                        data = profilePlaceholder,
+                        data = R.drawable.placeholder_profile_image,
                         builder = {
                             transformations(CircleCropTransformation())
                         }
