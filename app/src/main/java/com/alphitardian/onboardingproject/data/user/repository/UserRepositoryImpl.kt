@@ -13,11 +13,11 @@ import javax.inject.Singleton
 class UserRepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource) :
     UserRepository {
 
-    override suspend fun getUserProfile(userToken: String): Resource<UserResponse> {
+    override suspend fun getUserProfile(userToken: String): UserResponse {
         return remoteDataSource.getProfile(userToken)
     }
 
-    override suspend fun getNews(userToken: String): Resource<NewsResponse> {
+    override suspend fun getNews(userToken: String): NewsResponse {
         return remoteDataSource.getNews(userToken)
     }
 }
