@@ -6,6 +6,6 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.entity.Use
 interface LocalDataSource {
     suspend fun getNews() : List<NewsEntity>
     fun insertNews(news: NewsEntity)
-    suspend fun getUserProfile() : UserEntity
+    suspend fun getUserProfile() : UserEntity?
     fun insertProfile(user: UserEntity)
 }

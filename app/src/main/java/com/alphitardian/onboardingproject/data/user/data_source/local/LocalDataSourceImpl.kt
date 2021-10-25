@@ -14,7 +14,7 @@ class LocalDataSourceImpl @Inject constructor(
 
     override fun insertNews(news: NewsEntity) = newsDao.insertNews(news)
 
-    override suspend fun getUserProfile(): UserEntity = userDao.getUserProfile()
+    override suspend fun getUserProfile(): UserEntity? = userDao.getUserProfile()
 
     override fun insertProfile(user: UserEntity) = userDao.insertProfile(user)
 }
