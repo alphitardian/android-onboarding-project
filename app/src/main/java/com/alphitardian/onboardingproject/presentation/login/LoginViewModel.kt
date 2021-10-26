@@ -24,6 +24,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: UserLoginUseCase,
@@ -37,18 +38,40 @@ class LoginViewModel @Inject constructor(
 
     private val datastore = PrefStore(context)
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun loginUser() {
         viewModelScope.launch {
             runCatching {
                 mutableLoginState.postValue(Resource.Loading())
                 val body = LoginRequest(password = password.value, username = email.value)
                 val result = loginUseCase(body)
+                dataStoreTransaction(result)
                 mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
             }.getOrElse {
                 val error = Resource.Error<TokenResponse>(error = it)
                 mutableLoginState.postValue(error)
             }
+        }
+    }
+
+    private fun dataStoreTransaction(response: TokenResponse) {
+        val time = response.expiresTime
+        val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
+        val epochTime = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
+        saveExpiredTime(epochTime)
+        encryptToken(response.token)
+    }
+
+    private fun encryptToken(token: String) {
+        viewModelScope.launch {
+            KeystoreHelper.keyGenerator.init(KeystoreHelper.keyGenParameterSpec)
+            KeystoreHelper.keyGenerator.generateKey()
+
+            val encrypt = KeystoreHelper.encrypt(token.toByteArray())
+            val encryptedToken = Base64.encodeToString(encrypt["encrypted"], Base64.DEFAULT)
+            val iv = Base64.encodeToString(encrypt["iv"], Base64.DEFAULT)
+
+            saveToken(encryptedToken)
+            saveTokenIV(iv)
         }
     }
 
@@ -67,21 +90,6 @@ class LoginViewModel @Inject constructor(
     private fun saveExpiredTime(time: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             datastore.saveExpiredTime(time)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun encryptToken(token: String) {
-        viewModelScope.launch {
-            KeystoreHelper.keyGenerator.init(KeystoreHelper.keyGenParameterSpec)
-            KeystoreHelper.keyGenerator.generateKey()
-
-            val encrypt = KeystoreHelper.encrypt(token.toByteArray())
-            val encryptedToken = Base64.encodeToString(encrypt["encrypted"], Base64.DEFAULT)
-            val iv = Base64.encodeToString(encrypt["iv"], Base64.DEFAULT)
-
-            saveToken(encryptedToken)
-            saveTokenIV(iv)
         }
     }
 }

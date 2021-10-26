@@ -1,5 +1,7 @@
 package com.alphitardian.onboardingproject.presentation.login
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -26,6 +28,7 @@ import com.alphitardian.onboardingproject.presentation.login.components.Authenti
 import com.alphitardian.onboardingproject.presentation.login.components.TextInputField
 import retrofit2.HttpException
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
     val loginState = viewModel.loginState.observeAsState()
