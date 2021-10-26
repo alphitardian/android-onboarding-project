@@ -7,6 +7,6 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.response.
 import retrofit2.Response
 
 interface UserRepository {
-    suspend fun getUserProfile(userToken: String): Resource<UserResponse>
-    suspend fun getNews(userToken: String): Resource<NewsResponse>
+    suspend fun getUserProfile(userToken: String): UserResponse
+    suspend fun getNews(userToken: String): NewsResponse
 }
