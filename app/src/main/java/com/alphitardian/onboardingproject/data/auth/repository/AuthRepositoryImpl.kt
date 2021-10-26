@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.data.auth.repository
 
-import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.RemoteDataSource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
@@ -12,11 +11,11 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource) :
     AuthRepository {
 
-    override suspend fun loginUser(requestBody: LoginRequest): Resource<TokenResponse> {
+    override suspend fun loginUser(requestBody: LoginRequest): TokenResponse {
         return remoteDataSource.loginUser(requestBody)
     }
 
-    override suspend fun getUserToken(userToken: String): Resource<TokenResponse> {
+    override suspend fun getUserToken(userToken: String): TokenResponse {
         return remoteDataSource.getToken(userToken)
     }
 }

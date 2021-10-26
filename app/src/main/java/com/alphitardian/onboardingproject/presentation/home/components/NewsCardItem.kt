@@ -20,9 +20,6 @@ import com.alphitardian.onboardingproject.R
 
 @Composable
 fun NewsCardItem() {
-    val newsImagePlaceholder =
-        "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640"
-
     Card(elevation = 6.dp,
         modifier = Modifier
             .fillMaxWidth()
@@ -32,7 +29,7 @@ fun NewsCardItem() {
                 .fillMaxWidth()
                 .height(161.dp)) {
                 Image(
-                    painter = rememberImagePainter(data = newsImagePlaceholder),
+                    painter = rememberImagePainter(data = R.drawable.placeholder_news_image),
                     contentDescription = stringResource(id = R.string.content_description_news_image),
                     modifier = Modifier
                         .fillMaxSize()

@@ -31,7 +31,6 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     var email = mutableStateOf("")
     var password = mutableStateOf("")
-    var loading = mutableStateOf(false)
 
     var mutableLoginState: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val loginState: LiveData<Resource<TokenResponse>> get() = mutableLoginState
@@ -41,23 +40,15 @@ class LoginViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun loginUser() {
         viewModelScope.launch {
-            loading.value = true
-
-            val loginRequest = LoginRequest(password = password.value, username = email.value)
-            val result = loginUseCase(loginRequest)
-
-            mutableLoginState.postValue(result)
-
-            if (result is Resource.Success) {
-                val time = result.data.expiresTime
-                val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
-                val epoch = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
-
-                saveExpiredTime(epoch)
-                encryptToken(result.data.token)
+            runCatching {
+                mutableLoginState.postValue(Resource.Loading())
+                val body = LoginRequest(password = password.value, username = email.value)
+                val result = loginUseCase(body)
+                mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
+            }.getOrElse {
+                val error = Resource.Error<TokenResponse>(error = it)
+                mutableLoginState.postValue(error)
             }
-
-            loading.value = false
         }
     }
 

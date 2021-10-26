@@ -20,4 +20,8 @@
     <string name="placeholder_card_news">News Title</string>
     <string name="home_title">Hot Topics</string>
     <string name="home_sub_title">See What\'s Happening in the World</string>
+    <string name="login_alert_title">Login Failed</string>
+    <string name="login_alert_description">An error %1$s occured, please check your email or password</string>
+    <string name="login_alert_connection_description">Please check your connection</string>
+    <string name="login_alert_confirm_button">OK</string>
 </resources>

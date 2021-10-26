@@ -10,7 +10,7 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.entity.Use
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user LIMIT 1")
-    fun getUserProfile() : UserEntity
+    fun getUserProfile() : UserEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertProfile(user: UserEntity)

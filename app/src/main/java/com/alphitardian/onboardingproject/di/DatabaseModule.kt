@@ -2,6 +2,7 @@ package com.alphitardian.onboardingproject.di
 
 import android.content.Context
 import androidx.room.Room
+import com.alphitardian.onboardingproject.common.Constant.DATABASE_NAME
 import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSourceImpl
 import com.alphitardian.onboardingproject.data.user.data_source.local.database.NewsDao
 import com.alphitardian.onboardingproject.data.user.data_source.local.database.UserDao
@@ -22,7 +23,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "NewsAppDatabase"
+            DATABASE_NAME
         ).build()
     }
 
