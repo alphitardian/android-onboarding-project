@@ -29,53 +29,47 @@ import retrofit2.HttpException
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
     val loginState = viewModel.loginState.observeAsState()
-    val loading = viewModel.loading.value
     val alertDialog = remember { mutableStateOf(false) }
 
-    if (!loading) {
-        alertDialog.value = false
-        when (loginState.value) {
-            is Resource.Success -> {
-                alertDialog.value = false
-                viewModel.mutableLoginState.value = null
-                navController.navigate("home") {
-                    popUpTo("login") {
-                        inclusive = true
-                    }
+    when (loginState.value) {
+        is Resource.Success -> {
+            viewModel.mutableLoginState.value = null
+            navController.navigate("home") {
+                popUpTo("login") {
+                    inclusive = true
                 }
             }
-            is Resource.Error -> {
-                alertDialog.value = false
-                if ((loginState.value as Resource.Error<TokenResponse>).error is HttpException) {
-                    val errorMessage =
-                        (loginState.value as Resource.Error<TokenResponse>).error.localizedMessage
-                    val errorCode = errorMessage.split(" ")[1]
-                    alertDialog.value = true
+        }
+        is Resource.Error -> {
+            if ((loginState.value as Resource.Error<TokenResponse>).error is HttpException) {
+                val errorMessage =
+                    (loginState.value as Resource.Error<TokenResponse>).error.localizedMessage
+                val errorCode = errorMessage.split(" ")[1]
+                alertDialog.value = true
 
-                    when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                        ErrorState.ERROR_400 -> AuthenticationAlertDialog(errorMessage = String.format(
-                            stringResource(id = R.string.login_alert_description),
-                            ErrorState.ERROR_400.code.toString()),
-                            state = alertDialog)
-                        ErrorState.ERROR_401 -> AuthenticationAlertDialog(errorMessage = String.format(
-                            stringResource(id = R.string.login_alert_description),
-                            ErrorState.ERROR_401.code.toString()),
-                            state = alertDialog)
-                        ErrorState.ERROR_422 -> AuthenticationAlertDialog(errorMessage = String.format(
-                            stringResource(id = R.string.login_alert_description),
-                            ErrorState.ERROR_422.code.toString()),
-                            state = alertDialog)
-                        ErrorState.ERROR_UNKNOWN -> AuthenticationAlertDialog(errorMessage = String.format(
-                            stringResource(id = R.string.login_alert_description),
-                            ErrorState.ERROR_UNKNOWN.name),
-                            state = alertDialog)
-                    }
-                } else {
-                    AuthenticationAlertDialog(errorMessage = stringResource(id = R.string.login_alert_connection_description),
+                when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
+                    ErrorState.ERROR_400 -> AuthenticationAlertDialog(errorMessage = String.format(
+                        stringResource(id = R.string.login_alert_description),
+                        ErrorState.ERROR_400.code.toString()),
+                        state = alertDialog)
+                    ErrorState.ERROR_401 -> AuthenticationAlertDialog(errorMessage = String.format(
+                        stringResource(id = R.string.login_alert_description),
+                        ErrorState.ERROR_401.code.toString()),
+                        state = alertDialog)
+                    ErrorState.ERROR_422 -> AuthenticationAlertDialog(errorMessage = String.format(
+                        stringResource(id = R.string.login_alert_description),
+                        ErrorState.ERROR_422.code.toString()),
+                        state = alertDialog)
+                    ErrorState.ERROR_UNKNOWN -> AuthenticationAlertDialog(errorMessage = String.format(
+                        stringResource(id = R.string.login_alert_description),
+                        ErrorState.ERROR_UNKNOWN.name),
                         state = alertDialog)
                 }
+            } else {
+                alertDialog.value = true
+                AuthenticationAlertDialog(errorMessage = stringResource(id = R.string.login_alert_connection_description),
+                    state = alertDialog)
             }
-            else -> CircularProgressIndicator(color = Color.Cyan)
         }
     }
 
@@ -126,7 +120,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
             }
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.height(40.dp)) {
-                if (loading) {
+                if (loginState.value is Resource.Loading) {
                     CircularProgressIndicator(color = Color.Cyan)
                 }
             }

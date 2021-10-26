@@ -17,21 +17,21 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(private val loginUseCase: UserLoginUseCase) : ViewModel() {
     var email = mutableStateOf("")
     var password = mutableStateOf("")
-    var loading = mutableStateOf(false)
 
     var mutableLoginState: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val loginState: LiveData<Resource<TokenResponse>> get() = mutableLoginState
 
     fun loginUser() {
         viewModelScope.launch {
-            loading.value = true
-
-            val loginRequest = LoginRequest(password = password.value, username = email.value)
-            val result = loginUseCase(loginRequest)
-
-            mutableLoginState.postValue(result)
-
-            loading.value = false
+            runCatching {
+                mutableLoginState.postValue(Resource.Loading())
+                val body = LoginRequest(password = password.value, username = email.value)
+                val result = loginUseCase(body)
+                mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
+            }.getOrElse {
+                val error = Resource.Error<TokenResponse>(error = it)
+                mutableLoginState.postValue(error)
+            }
         }
     }
 }
