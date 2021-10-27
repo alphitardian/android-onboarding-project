@@ -27,18 +27,14 @@ import com.alphitardian.onboardingproject.presentation.login.components.TextInpu
 import retrofit2.HttpException
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val loginState = viewModel.loginState.observeAsState()
     val alertDialog = remember { mutableStateOf(false) }
 
     when (loginState.value) {
         is Resource.Success -> {
             viewModel.mutableLoginState.value = null
-            navController.navigate("home") {
-                popUpTo("login") {
-                    inclusive = true
-                }
-            }
+            navigate()
         }
         is Resource.Error -> {
             if ((loginState.value as Resource.Error<TokenResponse>).error is HttpException) {

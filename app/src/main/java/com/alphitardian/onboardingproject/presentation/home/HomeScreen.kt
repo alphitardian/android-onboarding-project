@@ -11,7 +11,7 @@ import com.alphitardian.onboardingproject.presentation.home.components.NewsConte
 import com.alphitardian.onboardingproject.presentation.home.components.TopBar
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navigate: () -> Unit) {
     Surface(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
         Column {
             TopBar()
