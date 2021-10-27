@@ -55,4 +55,10 @@ class PrefStore @Inject constructor(@ApplicationContext context: Context) {
             preference[USER_EXPIRED] = time
         }
     }
+
+    suspend fun clear() {
+        settingDataStore.edit {
+            it.clear()
+        }
+    }
 }

@@ -43,6 +43,12 @@ class LoginViewModel @Inject constructor(
 
     private val datastore = PrefStore(context)
 
+    init {
+        viewModelScope.launch {
+            datastore.clear()
+        }
+    }
+
     fun loginUser() {
         viewModelScope.launch {
             runCatching {
@@ -85,9 +91,6 @@ class LoginViewModel @Inject constructor(
 
     private fun encryptToken(token: String) {
         viewModelScope.launch {
-            KeystoreHelper.keyGenerator.init(KeystoreHelper.keyGenParameterSpec)
-            KeystoreHelper.keyGenerator.generateKey()
-
             val encrypt = KeystoreHelper.encrypt(token.toByteArray())
             val encryptedToken = Base64.encodeToString(encrypt["encrypted"], Base64.DEFAULT)
             val iv = Base64.encodeToString(encrypt["iv"], Base64.DEFAULT)

@@ -26,12 +26,12 @@ object KeystoreHelper {
     fun encrypt(data: ByteArray): HashMap<String, ByteArray> {
         val map = HashMap<String, ByteArray>()
         try {
+            keyGenerator.init(keyGenParameterSpec)
+
             val keyStore = KeyStore.getInstance(KEYSTORE_NAME)
             keyStore.load(null)
 
-            val secretKeyEntry =
-                keyStore.getEntry(KEY_ALIAS, null) as KeyStore.SecretKeyEntry
-            val secretKey = secretKeyEntry.secretKey
+            val secretKey = keyGenerator.generateKey()
 
             val cipher = Cipher.getInstance(CHIPER_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
