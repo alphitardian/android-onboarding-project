@@ -28,7 +28,6 @@ import retrofit2.HttpException
 @Composable
 fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val loginState = viewModel.loginState.observeAsState()
-    val errorState = viewModel.errorState.observeAsState()
     val alertDialog = remember { mutableStateOf(false) }
 
     when (loginState.value) {
@@ -38,7 +37,7 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
         }
         is Resource.Error -> {
             alertDialog.value = true
-            when (errorState.value) {
+            when ((loginState.value as Resource.Error<TokenResponse>).code) {
                 ErrorState.ERROR_400.code -> AuthenticationAlertDialog(errorMessage = String.format(
                     stringResource(id = R.string.login_alert_description),
                     ErrorState.ERROR_400.code.toString()),
