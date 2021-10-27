@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
@@ -30,47 +29,33 @@ import retrofit2.HttpException
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val loginState = viewModel.loginState.observeAsState()
+    val errorState = viewModel.errorState.observeAsState()
     val alertDialog = remember { mutableStateOf(false) }
 
     when (loginState.value) {
         is Resource.Success -> {
             viewModel.mutableLoginState.value = null
-            navController.navigate("home") {
-                popUpTo("login") {
-                    inclusive = true
-                }
-            }
+            navigate()
         }
         is Resource.Error -> {
-            if ((loginState.value as Resource.Error<TokenResponse>).error is HttpException) {
-                val errorMessage =
-                    (loginState.value as Resource.Error<TokenResponse>).error.localizedMessage
-                val errorCode = errorMessage.split(" ")[1]
-                alertDialog.value = true
-
-                when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                    ErrorState.ERROR_400 -> AuthenticationAlertDialog(errorMessage = String.format(
-                        stringResource(id = R.string.login_alert_description),
-                        ErrorState.ERROR_400.code.toString()),
-                        state = alertDialog)
-                    ErrorState.ERROR_401 -> AuthenticationAlertDialog(errorMessage = String.format(
-                        stringResource(id = R.string.login_alert_description),
-                        ErrorState.ERROR_401.code.toString()),
-                        state = alertDialog)
-                    ErrorState.ERROR_422 -> AuthenticationAlertDialog(errorMessage = String.format(
-                        stringResource(id = R.string.login_alert_description),
-                        ErrorState.ERROR_422.code.toString()),
-                        state = alertDialog)
-                    ErrorState.ERROR_UNKNOWN -> AuthenticationAlertDialog(errorMessage = String.format(
-                        stringResource(id = R.string.login_alert_description),
-                        ErrorState.ERROR_UNKNOWN.name),
-                        state = alertDialog)
-                }
-            } else {
-                alertDialog.value = true
-                AuthenticationAlertDialog(errorMessage = stringResource(id = R.string.login_alert_connection_description),
+            alertDialog.value = true
+            when (errorState.value) {
+                ErrorState.ERROR_400.code -> AuthenticationAlertDialog(errorMessage = String.format(
+                    stringResource(id = R.string.login_alert_description),
+                    ErrorState.ERROR_400.code.toString()),
+                    state = alertDialog)
+                ErrorState.ERROR_401.code -> AuthenticationAlertDialog(errorMessage = String.format(
+                    stringResource(id = R.string.login_alert_description),
+                    ErrorState.ERROR_401.code.toString()),
+                    state = alertDialog)
+                ErrorState.ERROR_422.code -> AuthenticationAlertDialog(errorMessage = String.format(
+                    stringResource(id = R.string.login_alert_description),
+                    ErrorState.ERROR_422.code.toString()),
+                    state = alertDialog)
+                ErrorState.ERROR_UNKNOWN.code -> AuthenticationAlertDialog(errorMessage = stringResource(
+                    id = R.string.login_alert_connection_description),
                     state = alertDialog)
             }
         }

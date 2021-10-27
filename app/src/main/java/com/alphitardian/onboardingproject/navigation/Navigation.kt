@@ -13,10 +13,22 @@ fun AppNavigation(startDestination: String) {
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
-            LoginScreen(navController = navController)
+            LoginScreen(navigate = {
+                navController.navigate("home") {
+                    popUpTo("login") {
+                        inclusive = true
+                    }
+                }
+            })
         }
         composable("home") {
-            HomeScreen(navController = navController)
+            HomeScreen(navigate = {
+                navController.navigate("login") {
+                    popUpTo("home") {
+                        inclusive = true
+                    }
+                }
+            })
         }
     }
 }
