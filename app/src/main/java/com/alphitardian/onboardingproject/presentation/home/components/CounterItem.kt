@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CounterItem(icon: Painter, iconDescription: String, counter: String) {
+fun CounterItem(icon: Painter, iconDescription: String, counter: Int) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 18.dp)) {
         Icon(painter = icon,
             contentDescription = iconDescription,
             tint = Color.Gray,
             modifier = Modifier
                 .padding(end = 4.dp))
-        Text(text = counter,
+        Text(text = counter.toString(),
             style = TextStyle(color = Color.Gray,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.W600))

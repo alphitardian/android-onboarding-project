@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.domain.use_case.get_profile
 
-import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import javax.inject.Inject
