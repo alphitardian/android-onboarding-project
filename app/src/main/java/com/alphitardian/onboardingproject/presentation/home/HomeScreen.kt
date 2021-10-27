@@ -10,6 +10,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
+import com.alphitardian.onboardingproject.presentation.home.components.NewsAlertDialog
 import com.alphitardian.onboardingproject.presentation.home.components.NewsContent
 import com.alphitardian.onboardingproject.presentation.home.components.TopBar
 
@@ -27,6 +30,8 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
     Surface(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
         val profileState = viewModel.profile.observeAsState()
         val newsState = viewModel.news.observeAsState()
+        val isUserLoggedin = viewModel.isLoggedin.value
+        val alertDialog = remember { mutableStateOf(false) }
 
         Column {
             when (profileState.value) {
@@ -61,6 +66,16 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                         CircularProgressIndicator(modifier = Modifier.background(color = Color.Transparent))
                     }
                 }
+            }
+            if (profileState.value is Resource.Error || newsState.value is Resource.Error) {
+
+            }
+        }
+        if (!isUserLoggedin) {
+            alertDialog.value = true
+
+            if (alertDialog.value) {
+                NewsAlertDialog(errorMessage = "please login", state = alertDialog)
             }
         }
     }

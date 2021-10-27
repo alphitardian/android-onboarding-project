@@ -8,21 +8,41 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.presentation.home.HomeScreen
 import com.alphitardian.onboardingproject.presentation.login.LoginScreen
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val datastore = PrefStore(this)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val savedToken = datastore.userToken.first().toString()
+
+            if (savedToken.isNotEmpty()) {
+                initUI("home")
+            } else {
+                initUI("login")
+            }
+        }
+    }
+
+    private fun initUI(navDestination: String) {
         setContent {
             OnboardingProjectTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    AppNavigation(startDestination = "login")
+                    AppNavigation(startDestination = navDestination)
                 }
             }
         }
