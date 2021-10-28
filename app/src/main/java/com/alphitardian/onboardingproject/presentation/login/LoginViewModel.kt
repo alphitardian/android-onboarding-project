@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
+import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.common.KeystoreHelper
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
@@ -50,6 +51,7 @@ class LoginViewModel @Inject constructor(
 
     fun loginUser() {
         viewModelScope.launch {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableLoginState.postValue(Resource.Loading())
                 val body = LoginRequest(password = password.value, username = email.value)
@@ -60,6 +62,7 @@ class LoginViewModel @Inject constructor(
                 val error = Resource.Error<TokenResponse>(error = it)
                 handleError(response = error)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
+import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
@@ -62,6 +63,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            EspressoIdlingResource.increment()
             delay(1000) // to able to get data from datastore
 
             val userToken = datastore.userToken.first().toString()
@@ -72,11 +74,13 @@ class HomeViewModel @Inject constructor(
                 getUserProfile(it)
                 getUserNews(it)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     private fun checkUserLoginTime() {
         viewModelScope.launch {
+            EspressoIdlingResource.increment()
             val expiredTime = datastore.userExpired.first()
 
             if (expiredTime >= 0) {
@@ -93,11 +97,13 @@ class HomeViewModel @Inject constructor(
                     else -> isLoggedin.value = false
                 }
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     fun getUserProfile(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
                 val result = profileUseCase(token)
@@ -107,11 +113,13 @@ class HomeViewModel @Inject constructor(
                 val error = Resource.Error<UserEntity>(error = it, code = errorCode)
                 mutableProfile.postValue(error)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     fun getUserNews(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase(token)
@@ -121,11 +129,13 @@ class HomeViewModel @Inject constructor(
                 val error = Resource.Error<List<NewsEntity>>(error = it, code = errorCode)
                 mutableNews.postValue(error)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     fun getNewToken(token: String) {
         viewModelScope.launch {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableRefreshToken.postValue(Resource.Loading())
                 val result = tokenUseCase(token)
@@ -137,6 +147,7 @@ class HomeViewModel @Inject constructor(
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
