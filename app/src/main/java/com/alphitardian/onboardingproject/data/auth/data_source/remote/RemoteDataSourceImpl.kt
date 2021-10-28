@@ -13,6 +13,6 @@ class RemoteDataSourceImpl @Inject constructor(private val authApi: AuthApi) : R
     }
 
     override suspend fun getToken(userToken: String): TokenResponse {
-        return authApi.getUserToken(userToken)
+        return authApi.getUserToken("Bearer $userToken")
     }
 }
