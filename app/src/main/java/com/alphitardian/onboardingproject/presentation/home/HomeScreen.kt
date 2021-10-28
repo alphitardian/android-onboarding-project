@@ -34,7 +34,6 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
         val profileState = viewModel.profile.observeAsState()
         val newsState = viewModel.news.observeAsState()
         val refreshTokenState = viewModel.refreshToken.observeAsState()
-        val errorState = viewModel.errorState.observeAsState()
         val isUserLoggedin = viewModel.isLoggedin.value
 
         val scaffoldState = rememberScaffoldState()
@@ -71,7 +70,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                     is Resource.Error -> {
                         Box(modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center) {
-                            when (errorState.value) {
+                            when ((newsState.value as Resource.Error<List<NewsItemResponse>>).code) {
                                 ErrorState.ERROR_401.code -> Text(text = stringResource(R.string.home_message_auth_failed))
                                 else -> Text(text = stringResource(R.string.home_message_connection_failed))
                             }

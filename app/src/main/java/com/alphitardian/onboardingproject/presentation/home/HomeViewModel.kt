@@ -2,7 +2,6 @@ package com.alphitardian.onboardingproject.presentation.home
 
 import android.content.Context
 import android.os.Build
-import android.util.Base64
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -10,13 +9,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
-import com.alphitardian.onboardingproject.common.KeystoreHelper
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
+import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
+import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseCase
@@ -39,10 +39,12 @@ class HomeViewModel @Inject constructor(
     private val profileUseCase: GetProfileUseCase,
     private val newsUseCase: GetNewsUseCase,
     private val tokenUseCase: GetTokenUseCase,
+    private val encryptTokenUseCase: EncryptTokenUseCase,
+    private val decryptTokenUseCase: DecryptTokenUseCase,
     @ApplicationContext context: Context,
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
-    var userDecryptedToken = mutableStateOf<ByteArray?>(byteArrayOf())
+    var userDecryptedToken = mutableStateOf<String?>("")
 
     private var mutableProfile: MutableLiveData<Resource<UserResponse>> = MutableLiveData()
     val profile: LiveData<Resource<UserResponse>> get() = mutableProfile
@@ -53,9 +55,6 @@ class HomeViewModel @Inject constructor(
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
 
-    var mutableErrorState: MutableLiveData<Int> = MutableLiveData()
-    val errorState: LiveData<Int> get() = mutableErrorState
-
     private val datastore = PrefStore(context)
     private val HOUR_IN_EPOCH_SECONDS = 3600
 
@@ -65,9 +64,9 @@ class HomeViewModel @Inject constructor(
 
             val userToken = datastore.userToken.first().toString()
             val userTokenIV = datastore.tokenInitializationVector.first().toString()
-            userDecryptedToken.value = KeystoreHelper.decrypt(userToken, userTokenIV)
+            userDecryptedToken.value = decryptTokenUseCase(userToken, userTokenIV)
             checkUserLoginTime()
-            userDecryptedToken.value?.decodeToString()?.let {
+            userDecryptedToken.value?.let {
                 getUserProfile(it)
                 getUserNews(it)
             }
@@ -84,7 +83,7 @@ class HomeViewModel @Inject constructor(
                 when {
                     endTime > HOUR_IN_EPOCH_SECONDS -> isLoggedin.value = true
                     endTime in 0 until HOUR_IN_EPOCH_SECONDS -> {
-                        userDecryptedToken.value?.decodeToString()?.let {
+                        userDecryptedToken.value?.let {
                             getNewToken(it)
                         }
                         isLoggedin.value = true
@@ -102,9 +101,9 @@ class HomeViewModel @Inject constructor(
                 val result = profileUseCase(token)
                 mutableProfile.postValue(Resource.Success<UserResponse>(data = result))
             }.getOrElse {
-                val error = Resource.Error<UserResponse>(error = it)
+                val errorCode = handleErrorCode(it)
+                val error = Resource.Error<UserResponse>(error = it, code = errorCode)
                 mutableProfile.postValue(error)
-                handleError(error)
             }
         }
     }
@@ -116,9 +115,9 @@ class HomeViewModel @Inject constructor(
                 val result = newsUseCase(token)
                 mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
             }.getOrElse {
-                val error = Resource.Error<List<NewsItemResponse>>(error = it)
+                val errorCode = handleErrorCode(it)
+                val error = Resource.Error<List<NewsItemResponse>>(error = it, code = errorCode)
                 mutableNews.postValue(error)
-                handleError(error)
             }
         }
     }
@@ -131,26 +130,28 @@ class HomeViewModel @Inject constructor(
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
             }.getOrElse {
-                val error = Resource.Error<TokenResponse>(error = it)
+                val errorCode = handleErrorCode(it)
+                val error = Resource.Error<TokenResponse>(error = it, errorCode)
                 mutableRefreshToken.postValue(error)
-                handleError(error)
                 isLoggedin.value = false
             }
         }
     }
 
-    private fun handleError(response: Resource.Error<*>) {
-        if (response.error is HttpException) {
-            val errorMessage = response.error.localizedMessage
+    private fun handleErrorCode(error: Throwable): Int {
+        var code: Int = 0
+        if (error is HttpException) {
+            val errorMessage = error.localizedMessage
             val errorCode = errorMessage.split(" ")[1]
 
             when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                ErrorState.ERROR_401 -> mutableErrorState.value = ErrorState.ERROR_401.code
-                ErrorState.ERROR_UNKNOWN -> mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+                ErrorState.ERROR_401 -> code = errorCode.toInt()
+                ErrorState.ERROR_UNKNOWN -> code = 0
             }
         } else {
-            mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+            code = 0
         }
+        return code
     }
 
     fun formatNewsCategory(channel: ChannelResponse?): String? {
@@ -176,12 +177,9 @@ class HomeViewModel @Inject constructor(
 
     private fun encryptToken(token: String) {
         viewModelScope.launch {
-            val encrypt = KeystoreHelper.encrypt(token.toByteArray())
-            val encryptedToken = Base64.encodeToString(encrypt["encrypted"], Base64.DEFAULT)
-            val iv = Base64.encodeToString(encrypt["iv"], Base64.DEFAULT)
-
-            saveToken(encryptedToken)
-            saveTokenIV(iv)
+            val encryptedMap = encryptTokenUseCase(token)
+            encryptedMap["token"]?.let { saveToken(it) }
+            encryptedMap["iv"]?.let { saveTokenIV(it) }
         }
     }
 
