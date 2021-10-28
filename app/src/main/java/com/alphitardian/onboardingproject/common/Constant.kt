@@ -5,4 +5,6 @@ object Constant {
     const val KEYSTORE_NAME = "AndroidKeyStore"
     const val KEY_ALIAS = "KeyAlias"
     const val CHIPER_ALGORITHM = "AES/GCM/NoPadding"
+    const val DESTINATION_LOGIN = "login"
+    const val DESTINATION_HOME = "home"
 }

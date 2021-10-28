@@ -5,13 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_HOME
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_LOGIN
 import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.navigation.AppNavigation
-import com.alphitardian.onboardingproject.presentation.home.HomeScreen
-import com.alphitardian.onboardingproject.presentation.login.LoginScreen
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +27,9 @@ class MainActivity : ComponentActivity() {
             val savedToken = datastore.userToken.first().toString()
 
             if (savedToken.isNotEmpty()) {
-                initUI("home")
+                initUI(DESTINATION_HOME)
             } else {
-                initUI("login")
+                initUI(DESTINATION_LOGIN)
             }
         }
     }

@@ -15,6 +15,7 @@ import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
+import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.user_login.UserLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,6 +31,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: UserLoginUseCase,
+    private val encryptTokenUseCase: EncryptTokenUseCase,
     @ApplicationContext context: Context,
 ) : ViewModel() {
     var email = mutableStateOf("")
@@ -37,9 +39,6 @@ class LoginViewModel @Inject constructor(
 
     var mutableLoginState: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val loginState: LiveData<Resource<TokenResponse>> get() = mutableLoginState
-
-    var mutableErrorState: MutableLiveData<Int> = MutableLiveData()
-    val errorState: LiveData<Int> get() = mutableErrorState
 
     private val datastore = PrefStore(context)
 
@@ -59,7 +58,6 @@ class LoginViewModel @Inject constructor(
                 mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
             }.getOrElse {
                 val error = Resource.Error<TokenResponse>(error = it)
-                mutableLoginState.postValue(error)
                 handleError(response = error)
             }
         }
@@ -71,13 +69,13 @@ class LoginViewModel @Inject constructor(
             val errorCode = errorMessage.split(" ")[1]
 
             when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                ErrorState.ERROR_400 -> mutableErrorState.value = ErrorState.ERROR_400.code
-                ErrorState.ERROR_401 -> mutableErrorState.value = ErrorState.ERROR_401.code
-                ErrorState.ERROR_422 -> mutableErrorState.value = ErrorState.ERROR_422.code
-                ErrorState.ERROR_UNKNOWN -> mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+                ErrorState.ERROR_400 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
+                ErrorState.ERROR_401 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_401.code))
+                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code))
+                ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
             }
         } else {
-            mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+            mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
         }
     }
 
@@ -91,12 +89,9 @@ class LoginViewModel @Inject constructor(
 
     private fun encryptToken(token: String) {
         viewModelScope.launch {
-            val encrypt = KeystoreHelper.encrypt(token.toByteArray())
-            val encryptedToken = Base64.encodeToString(encrypt["encrypted"], Base64.DEFAULT)
-            val iv = Base64.encodeToString(encrypt["iv"], Base64.DEFAULT)
-
-            saveToken(encryptedToken)
-            saveTokenIV(iv)
+            val encryptedMap = encryptTokenUseCase(token)
+            encryptedMap["token"]?.let { saveToken(it) }
+            encryptedMap["iv"]?.let { saveTokenIV(it) }
         }
     }
 
