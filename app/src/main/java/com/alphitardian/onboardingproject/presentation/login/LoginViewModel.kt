@@ -40,9 +40,6 @@ class LoginViewModel @Inject constructor(
     var mutableLoginState: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val loginState: LiveData<Resource<TokenResponse>> get() = mutableLoginState
 
-    var mutableErrorState: MutableLiveData<Int> = MutableLiveData()
-    val errorState: LiveData<Int> get() = mutableErrorState
-
     private val datastore = PrefStore(context)
 
     init {
@@ -61,7 +58,6 @@ class LoginViewModel @Inject constructor(
                 mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
             }.getOrElse {
                 val error = Resource.Error<TokenResponse>(error = it)
-                mutableLoginState.postValue(error)
                 handleError(response = error)
             }
         }
@@ -73,13 +69,13 @@ class LoginViewModel @Inject constructor(
             val errorCode = errorMessage.split(" ")[1]
 
             when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                ErrorState.ERROR_400 -> mutableErrorState.value = ErrorState.ERROR_400.code
-                ErrorState.ERROR_401 -> mutableErrorState.value = ErrorState.ERROR_401.code
-                ErrorState.ERROR_422 -> mutableErrorState.value = ErrorState.ERROR_422.code
-                ErrorState.ERROR_UNKNOWN -> mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+                ErrorState.ERROR_400 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
+                ErrorState.ERROR_401 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_401.code))
+                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code))
+                ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
             }
         } else {
-            mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+            mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_LOGIN
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.presentation.home.HomeScreen
 import com.alphitardian.onboardingproject.presentation.login.LoginScreen
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
             OnboardingProjectTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    AppNavigation(startDestination = "login")
+                    AppNavigation(startDestination = DESTINATION_LOGIN)
                 }
             }
         }

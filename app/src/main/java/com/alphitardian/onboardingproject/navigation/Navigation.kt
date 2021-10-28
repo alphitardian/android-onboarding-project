@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_HOME
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_LOGIN
 import com.alphitardian.onboardingproject.presentation.home.HomeScreen
 import com.alphitardian.onboardingproject.presentation.login.LoginScreen
 
@@ -12,19 +14,19 @@ fun AppNavigation(startDestination: String) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
-        composable("login") {
+        composable(DESTINATION_LOGIN) {
             LoginScreen(navigate = {
-                navController.navigate("home") {
-                    popUpTo("login") {
+                navController.navigate(DESTINATION_HOME) {
+                    popUpTo(DESTINATION_LOGIN) {
                         inclusive = true
                     }
                 }
             })
         }
-        composable("home") {
+        composable(DESTINATION_HOME) {
             HomeScreen(navigate = {
-                navController.navigate("login") {
-                    popUpTo("home") {
+                navController.navigate(DESTINATION_LOGIN) {
+                    popUpTo(DESTINATION_HOME) {
                         inclusive = true
                     }
                 }
