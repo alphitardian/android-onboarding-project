@@ -24,4 +24,9 @@
     <string name="login_alert_description">An error %1$s occured, please check your email or password</string>
     <string name="login_alert_connection_description">Please check your connection</string>
     <string name="login_alert_confirm_button">OK</string>
+    <string name="home_alert_title">Your session is expired</string>
+    <string name="home_alert_description">Please try to login again.</string>
+    <string name="home_snackbar_description">An error occured, please try to log in.</string>
+    <string name="home_message_auth_failed">Authorization failed.</string>
+    <string name="home_message_connection_failed">Please check your connection</string>
 </resources>

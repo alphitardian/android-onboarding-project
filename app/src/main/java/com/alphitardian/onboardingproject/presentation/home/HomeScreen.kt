@@ -3,7 +3,9 @@ package com.alphitardian.onboardingproject.presentation.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,8 +15,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
@@ -22,7 +26,6 @@ import com.alphitardian.onboardingproject.presentation.home.components.NewsAlert
 import com.alphitardian.onboardingproject.presentation.home.components.NewsContent
 import com.alphitardian.onboardingproject.presentation.home.components.TopBar
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -31,9 +34,8 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
         val profileState = viewModel.profile.observeAsState()
         val newsState = viewModel.news.observeAsState()
         val refreshTokenState = viewModel.refreshToken.observeAsState()
-
+        val errorState = viewModel.errorState.observeAsState()
         val isUserLoggedin = viewModel.isLoggedin.value
-        val currentToken = viewModel.userDecryptedToken.value
 
         val scaffoldState = rememberScaffoldState()
         val coroutineScope = rememberCoroutineScope()
@@ -50,25 +52,10 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                         TopBar(userProfile = (profileState.value as Resource.Success<UserResponse>).data)
                     }
                     is Resource.Loading -> {
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(64.dp)
-                            .background(color = Color.Transparent),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(modifier = Modifier.background(color = Color.Transparent))
-                        }
+                        LoadingStateIndicator()
                     }
                     is Resource.Error -> {
-                        if ((profileState.value as Resource.Error<UserResponse>).error is HttpException) {
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp), contentAlignment = Alignment.Center) {
-                                Text(text = "No authorized")
-                            }
-                        } else {
-                            TopBar(userProfile = null)
-                        }
+                        TopBar(userProfile = null)
                     }
                 }
                 when (newsState.value) {
@@ -79,48 +66,27 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                         )
                     }
                     is Resource.Loading -> {
-                        Box(modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color.Transparent),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(modifier = Modifier.background(color = Color.Transparent))
-                        }
+                        LoadingStateIndicator()
                     }
                     is Resource.Error -> {
-                        if ((newsState.value as Resource.Error<List<NewsItemResponse>>).error is HttpException) {
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp), contentAlignment = Alignment.Center) {
-                                Text(text = "No authorized")
-                            }
-                        } else {
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp), contentAlignment = Alignment.Center) {
-                                Text(text = "No Connection")
+                        Box(modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center) {
+                            when (errorState.value) {
+                                ErrorState.ERROR_401.code -> Text(text = stringResource(R.string.home_message_auth_failed))
+                                else -> Text(text = stringResource(R.string.home_message_connection_failed))
                             }
                         }
                     }
                 }
             }
             when (refreshTokenState.value) {
-                is Resource.Success -> {
-                    coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar("Token refreshed!")
-                    }
-                }
                 is Resource.Loading -> {
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Transparent),
-                        contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
+                    LoadingStateIndicator()
                 }
                 is Resource.Error -> {
+                    val errorMessage = stringResource(id = R.string.home_snackbar_description)
                     coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar("An error occured, please try to log in.")
+                        scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
                     }
                 }
             }
@@ -131,16 +97,22 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
 
             if (alertDialog.value) {
                 NewsAlertDialog(
-                    errorMessage = "Press OK to refresh, press LOGOUT to go to Login Screen.",
+                    errorMessage = stringResource(R.string.home_alert_description),
                     confirmOnClick = {
-                        currentToken?.decodeToString()?.let { viewModel.getNewToken(it) }
-                        alertDialog.value = false
-                    },
-                    dismissOnClick = {
                         navigate()
                     }
                 )
             }
         }
+    }
+}
+
+@Composable
+fun LoadingStateIndicator() {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.Transparent),
+        contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
     }
 }

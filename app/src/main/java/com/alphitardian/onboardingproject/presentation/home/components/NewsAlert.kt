@@ -9,11 +9,11 @@ import androidx.compose.ui.text.TextStyle
 import com.alphitardian.onboardingproject.R
 
 @Composable
-fun NewsAlertDialog(errorMessage: String, confirmOnClick: () -> Unit, dismissOnClick: () -> Unit) {
+fun NewsAlertDialog(errorMessage: String, confirmOnClick: () -> Unit) {
     AlertDialog(
         onDismissRequest = { null },
         title = {
-            Text(text = "Your session is expired",
+            Text(text = stringResource(R.string.home_alert_title),
                 style = TextStyle(color = MaterialTheme.colors.onBackground))
         },
         text = {
@@ -25,11 +25,6 @@ fun NewsAlertDialog(errorMessage: String, confirmOnClick: () -> Unit, dismissOnC
                 colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colors.primary)) {
                 Text(text = stringResource(R.string.login_alert_confirm_button),
                     style = TextStyle(color = MaterialTheme.colors.onPrimary))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { dismissOnClick()}) {
-                Text(text = "Log Out", style = TextStyle(color = Color.Red))
             }
         }
     )

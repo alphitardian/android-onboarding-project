@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.KeystoreHelper
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
@@ -52,17 +53,20 @@ class HomeViewModel @Inject constructor(
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
 
+    var mutableErrorState: MutableLiveData<Int> = MutableLiveData()
+    val errorState: LiveData<Int> get() = mutableErrorState
+
     private val datastore = PrefStore(context)
     private val HOUR_IN_EPOCH_SECONDS = 3600
 
     init {
         viewModelScope.launch {
             delay(1000) // to able to get data from datastore
-            checkUserLoginTime()
 
             val userToken = datastore.userToken.first().toString()
             val userTokenIV = datastore.tokenInitializationVector.first().toString()
             userDecryptedToken.value = KeystoreHelper.decrypt(userToken, userTokenIV)
+            checkUserLoginTime()
             userDecryptedToken.value?.decodeToString()?.let {
                 getUserProfile(it)
                 getUserNews(it)
@@ -76,11 +80,17 @@ class HomeViewModel @Inject constructor(
 
             if (expiredTime >= 0) {
                 val endTime = expiredTime - Date().toInstant().epochSecond
-                println(expiredTime)
-                println(Date().toInstant().epochSecond)
-                println(endTime)
 
-                isLoggedin.value = endTime > HOUR_IN_EPOCH_SECONDS
+                when {
+                    endTime > HOUR_IN_EPOCH_SECONDS -> isLoggedin.value = true
+                    endTime in 0 until HOUR_IN_EPOCH_SECONDS -> {
+                        userDecryptedToken.value?.decodeToString()?.let {
+                            getNewToken(it)
+                        }
+                        isLoggedin.value = true
+                    }
+                    else -> isLoggedin.value = false
+                }
             }
         }
     }
@@ -94,19 +104,21 @@ class HomeViewModel @Inject constructor(
             }.getOrElse {
                 val error = Resource.Error<UserResponse>(error = it)
                 mutableProfile.postValue(error)
+                handleError(error)
             }
         }
     }
 
     fun getUserNews(token: String) {
         viewModelScope.launch {
-            kotlin.runCatching {
+            runCatching {
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase(token)
                 mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
             }.getOrElse {
                 val error = Resource.Error<List<NewsItemResponse>>(error = it)
                 mutableNews.postValue(error)
+                handleError(error)
             }
         }
     }
@@ -114,31 +126,34 @@ class HomeViewModel @Inject constructor(
     fun getNewToken(token: String) {
         viewModelScope.launch {
             runCatching {
-                println(token)
-                isLoggedin.value = true
                 mutableRefreshToken.postValue(Resource.Loading())
                 val result = tokenUseCase(token)
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
-                println(result)
             }.getOrElse {
                 val error = Resource.Error<TokenResponse>(error = it)
                 mutableRefreshToken.postValue(error)
-                println(error)
+                handleError(error)
                 isLoggedin.value = false
             }
         }
     }
 
-    fun handleError(response: Resource.Error<*>) {
+    private fun handleError(response: Resource.Error<*>) {
         if (response.error is HttpException) {
-            println("no authorized")
+            val errorMessage = response.error.localizedMessage
+            val errorCode = errorMessage.split(" ")[1]
+
+            when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
+                ErrorState.ERROR_401 -> mutableErrorState.value = ErrorState.ERROR_401.code
+                ErrorState.ERROR_UNKNOWN -> mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
+            }
         } else {
-            println("checkout your connection")
+            mutableErrorState.value = ErrorState.ERROR_UNKNOWN.code
         }
     }
 
-    fun formatNewsCategory(channel: ChannelResponse?) : String? {
+    fun formatNewsCategory(channel: ChannelResponse?): String? {
         val validCategory = channel?.name?.split("/")?.get(1)?.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
