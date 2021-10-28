@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
@@ -61,7 +62,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                 when (newsState.value) {
                     is Resource.Success -> {
                         NewsContent(
-                            news = (newsState.value as Resource.Success<List<NewsItemResponse>>).data,
+                            news = (newsState.value as Resource.Success<List<NewsEntity>>).data,
                             viewModel = viewModel
                         )
                     }
@@ -71,7 +72,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                     is Resource.Error -> {
                         Box(modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center) {
-                            when ((newsState.value as Resource.Error<List<NewsItemResponse>>).code) {
+                            when ((newsState.value as Resource.Error<List<NewsEntity>>).code) {
                                 ErrorState.ERROR_401.code -> Text(text = stringResource(R.string.home_message_auth_failed))
                                 else -> Text(text = stringResource(R.string.home_message_connection_failed))
                             }

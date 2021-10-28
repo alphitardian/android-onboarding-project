@@ -1,9 +1,11 @@
 package com.alphitardian.onboardingproject.data.user.repository
 
 import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.RemoteDataSource
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
+import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.toNewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.toUserEntity
 import com.alphitardian.onboardingproject.domain.repository.UserRepository
@@ -32,7 +34,26 @@ class UserRepositoryImpl @Inject constructor(
         return user
     }
 
-    override suspend fun getNews(userToken: String): NewsResponse {
-        return remoteDataSource.getNews(userToken)
+    override suspend fun getNews(userToken: String): List<NewsEntity>? {
+        var news : List<NewsEntity>?
+        var response : NewsResponse?
+        withContext(Dispatchers.IO) {
+            news = localDataSource.getNews()
+
+            if (news?.isEmpty() == true || news?.size == 0) {
+                response = remoteDataSource.getNews(userToken)
+
+                news?.forEachIndexed { index, newsEntity ->
+                    if (newsEntity == response?.data?.get(index)?.toNewsEntity()) return@withContext
+                }
+                news = response?.data?.map {
+                    it.toNewsEntity()
+                }
+                news?.map {
+                    localDataSource.insertNews(it)
+                }
+            }
+        }
+        return news
     }
 }

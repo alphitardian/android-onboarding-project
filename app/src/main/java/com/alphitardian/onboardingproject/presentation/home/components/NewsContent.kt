@@ -18,12 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewsContent(news: List<NewsItemResponse>?, viewModel: HomeViewModel) {
+fun NewsContent(news: List<NewsEntity>?, viewModel: HomeViewModel) {
     LazyColumn(modifier = Modifier.padding(top = 29.dp, start = 17.dp, end = 17.dp)) {
         item {
             Text(text = stringResource(id = R.string.home_title),

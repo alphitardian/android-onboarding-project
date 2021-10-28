@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
@@ -50,8 +51,8 @@ class HomeViewModel @Inject constructor(
     private var mutableProfile: MutableLiveData<Resource<UserEntity>> = MutableLiveData()
     val profile: LiveData<Resource<UserEntity>> get() = mutableProfile
 
-    private var mutableNews: MutableLiveData<Resource<List<NewsItemResponse>>> = MutableLiveData()
-    val news: LiveData<Resource<List<NewsItemResponse>>> get() = mutableNews
+    private var mutableNews: MutableLiveData<Resource<List<NewsEntity>>> = MutableLiveData()
+    val news: LiveData<Resource<List<NewsEntity>>> get() = mutableNews
 
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
@@ -110,14 +111,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getUserNews(token: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase(token)
-                mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
+                result?.let { mutableNews.postValue(Resource.Success<List<NewsEntity>>(data = it)) }
             }.getOrElse {
                 val errorCode = handleErrorCode(it)
-                val error = Resource.Error<List<NewsItemResponse>>(error = it, code = errorCode)
+                val error = Resource.Error<List<NewsEntity>>(error = it, code = errorCode)
                 mutableNews.postValue(error)
             }
         }
@@ -155,8 +156,8 @@ class HomeViewModel @Inject constructor(
         return code
     }
 
-    fun formatNewsCategory(channel: ChannelResponse?): String? {
-        val validCategory = channel?.name?.split("/")?.get(1)?.replaceFirstChar {
+    fun formatNewsCategory(channel: String?): String? {
+        val validCategory = channel?.split("/")?.get(1)?.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
         return validCategory
