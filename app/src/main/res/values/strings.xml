@@ -29,4 +29,9 @@
     <string name="home_snackbar_description">An error occured, please try to log in.</string>
     <string name="home_message_auth_failed">Authorization failed.</string>
     <string name="home_message_connection_failed">Please check your connection</string>
+    <string name="testtag_login_email">emailTextField</string>
+    <string name="testtag_login_password">passwordTextField</string>
+    <string name="testtag_login_button">loginButton</string>
+    <string name="testtag_login_password_visibility_icon">passwordVisibilityIcon</string>
+    <string name="testtag_login_auth_dialog">authDialog</string>
 </resources>
