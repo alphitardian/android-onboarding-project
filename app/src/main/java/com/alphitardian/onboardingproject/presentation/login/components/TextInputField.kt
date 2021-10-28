@@ -3,13 +3,9 @@ package com.alphitardian.onboardingproject.presentation.login.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,8 +20,10 @@ fun TextInputField(
     value: String,
     onValueChange: (String) -> Unit,
 ) {
+    var passwordVisibility by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title, color = Color.Gray)
+        Text(text = title, color = MaterialTheme.colors.onSurface)
         TextField(
             value = value,
             onValueChange = onValueChange,
@@ -38,17 +36,29 @@ fun TextInputField(
                     )
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colors.surface,
+                textColor = MaterialTheme.colors.onBackground
+            ),
+            visualTransformation = if (!passwordVisibility && isPassword) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Email
             ),
             trailingIcon = {
                 if (isPassword) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_visibility_off_24),
-                        contentDescription = stringResource(R.string.content_description_visibility_icon)
-                    )
+                    val icon =
+                        if (passwordVisibility) R.drawable.ic_baseline_visibility_24 else R.drawable.ic_baseline_visibility_off_24
+
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        Icon(
+                            painter = painterResource(id = icon),
+                            contentDescription = stringResource(R.string.content_description_visibility_icon)
+                        )
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
