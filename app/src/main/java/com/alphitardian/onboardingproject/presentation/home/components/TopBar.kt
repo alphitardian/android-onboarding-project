@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -24,7 +25,7 @@ import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun TopBar(userProfile: UserResponse?) {
+fun TopBar(userProfile: UserEntity?) {
     Card(
         shape = RoundedCornerShape(bottomEnd = 12.dp),
         backgroundColor = MaterialTheme.colors.primary,

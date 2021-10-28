@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
@@ -46,8 +47,8 @@ class HomeViewModel @Inject constructor(
     var isLoggedin = mutableStateOf(true)
     var userDecryptedToken = mutableStateOf<String?>("")
 
-    private var mutableProfile: MutableLiveData<Resource<UserResponse>> = MutableLiveData()
-    val profile: LiveData<Resource<UserResponse>> get() = mutableProfile
+    private var mutableProfile: MutableLiveData<Resource<UserEntity>> = MutableLiveData()
+    val profile: LiveData<Resource<UserEntity>> get() = mutableProfile
 
     private var mutableNews: MutableLiveData<Resource<List<NewsItemResponse>>> = MutableLiveData()
     val news: LiveData<Resource<List<NewsItemResponse>>> get() = mutableNews
@@ -95,14 +96,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getUserProfile(token: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
                 val result = profileUseCase(token)
-                mutableProfile.postValue(Resource.Success<UserResponse>(data = result))
+                result?.let { mutableProfile.postValue(Resource.Success<UserEntity>(data = it)) }
             }.getOrElse {
                 val errorCode = handleErrorCode(it)
-                val error = Resource.Error<UserResponse>(error = it, code = errorCode)
+                val error = Resource.Error<UserEntity>(error = it, code = errorCode)
                 mutableProfile.postValue(error)
             }
         }

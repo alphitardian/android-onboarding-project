@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.presentation.home.components.NewsAlertDialog
@@ -48,7 +49,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
             Column {
                 when (profileState.value) {
                     is Resource.Success -> {
-                        TopBar(userProfile = (profileState.value as Resource.Success<UserResponse>).data)
+                        TopBar(userProfile = (profileState.value as Resource.Success<UserEntity>).data)
                     }
                     is Resource.Loading -> {
                         LoadingStateIndicator()
