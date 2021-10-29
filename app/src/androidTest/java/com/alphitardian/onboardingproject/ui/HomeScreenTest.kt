@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.IdlingRegistry
 import com.alphitardian.onboardingproject.MainActivity
 import com.alphitardian.onboardingproject.R
-import com.alphitardian.onboardingproject.common.Constant.DESTINATION_HOME
+import com.alphitardian.onboardingproject.common.Constant.DESTINATION_LOGIN
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
@@ -25,14 +25,35 @@ class HomeScreenTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
         composeTestRule.setContent {
             OnboardingProjectTheme {
-                AppNavigation(startDestination = DESTINATION_HOME)
+                AppNavigation(startDestination = DESTINATION_LOGIN)
             }
         }
+        getUserLoggedIn()
     }
 
     @After
     fun teardown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
+    }
+
+    fun getUserLoggedIn() {
+        val emailTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_email)),
+                true)
+        val passwordTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
+                true)
+        val button =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
+                true)
+
+        emailTextField.performClick()
+        emailTextField.performTextInput("tester")
+
+        passwordTextField.performClick()
+        passwordTextField.performTextInput("tester123")
+
+        button.performClick()
     }
 
     @Test
