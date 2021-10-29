@@ -79,11 +79,18 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                 }
             }
             when (refreshTokenState.value) {
+                is Resource.Success -> {
+                    val successMessage =
+                        stringResource(id = R.string.home_snackbar_success_description)
+                    coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(message = successMessage)
+                    }
+                }
                 is Resource.Loading -> {
                     LoadingStateIndicator()
                 }
                 is Resource.Error -> {
-                    val errorMessage = stringResource(id = R.string.home_snackbar_description)
+                    val errorMessage = stringResource(id = R.string.home_snackbar_error_description)
                     coroutineScope.launch {
                         scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
                     }

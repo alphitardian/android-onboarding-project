@@ -1,11 +1,24 @@
 <resources>
     <string name="app_name">Onboarding Project</string>
+
+    <!--    Login Screen    -->
     <string name="login_title">TimeRomanNews.</string>
     <string name="label_email">Email</string>
     <string name="label_password">Password</string>
     <string name="button_login">Login</string>
     <string name="hint_login_input">Type your %1$s here</string>
     <string name="content_description_visibility_icon">Show password Icon</string>
+    <string name="login_alert_title">Login Failed</string>
+    <string name="login_alert_description">An error %1$s occured, please check your email or password</string>
+    <string name="login_alert_connection_description">Please check your connection</string>
+    <string name="login_alert_confirm_button">OK</string>
+    <string name="testtag_login_email">emailTextField</string>
+    <string name="testtag_login_password">passwordTextField</string>
+    <string name="testtag_login_button">loginButton</string>
+    <string name="testtag_login_password_visibility_icon">passwordVisibilityIcon</string>
+    <string name="testtag_login_auth_dialog">authDialog</string>
+
+    <!--    Home Screen     -->
     <string name="content_description_profile_image">User profile image</string>
     <string name="content_description_news_image">News image</string>
     <string name="content_description_view_icon">News Views Icon</string>
@@ -20,20 +33,12 @@
     <string name="placeholder_card_news">News Title</string>
     <string name="home_title">Hot Topics</string>
     <string name="home_sub_title">See What\'s Happening in the World</string>
-    <string name="login_alert_title">Login Failed</string>
-    <string name="login_alert_description">An error %1$s occured, please check your email or password</string>
-    <string name="login_alert_connection_description">Please check your connection</string>
-    <string name="login_alert_confirm_button">OK</string>
     <string name="home_alert_title">Your session is expired</string>
     <string name="home_alert_description">Please try to login again.</string>
-    <string name="home_snackbar_description">An error occured, please try to log in.</string>
+    <string name="home_snackbar_error_description">An error occured, please try to log in.</string>
+    <string name="home_snackbar_success_description">Content Refreshed!</string>
     <string name="home_message_auth_failed">Authorization failed.</string>
     <string name="home_message_connection_failed">Please check your connection</string>
-    <string name="testtag_login_email">emailTextField</string>
-    <string name="testtag_login_password">passwordTextField</string>
-    <string name="testtag_login_button">loginButton</string>
-    <string name="testtag_login_password_visibility_icon">passwordVisibilityIcon</string>
-    <string name="testtag_login_auth_dialog">authDialog</string>
     <string name="testtag_home_topbar">homeTopBar</string>
     <string name="testtag_home_news_content">homeNewsContent</string>
     <string name="testtag_home_topbar_profile_picture">topBarProfilePicture</string>

@@ -40,7 +40,8 @@ fun TextInputField(
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.surface,
-                textColor = MaterialTheme.colors.onBackground
+                textColor = MaterialTheme.colors.onBackground,
+                cursorColor = MaterialTheme.colors.onBackground
             ),
             visualTransformation = if (!passwordVisibility && isPassword) {
                 PasswordVisualTransformation()
