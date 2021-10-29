@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Garlic ice-cream was her favorite #9801",
+      "url": "https://www.google.fi/search?q=Garlic+ice-cream+was+her+favorite",
+      "cover_image": "https://place-hold.it/600x400/ddd/000000.jpg&text=Image-0&bold&fontsize=20",
+      "nsfw": false,
+      "channel": {
+        "id": 1,
+        "name": "r/tycoon"
+      },
+      "counter": {
+        "upvote": 383,
+        "downvote": 420,
+        "comment": 64,
+        "view": 9119
+      },
+      "created_at": "2021-10-26T02:17:31Z"
+    },
+    {
+      "id": 2,
+      "title": "I think I will buy the red car, or I will lease the blue one #7725",
+      "url": "https://www.google.fi/search?q=I+think+I+will+buy+the+red+car%2C+or+I+will+lease+the+blue+one",
+      "cover_image": "https://place-hold.it/600x400/ddd/000000.jpg&text=Image-1&bold&fontsize=20",
+      "nsfw": true,
+      "channel": {
+        "id": 2,
+        "name": "r/expect"
+      },
+      "counter": {
+        "upvote": 76,
+        "downvote": 55,
+        "comment": 63,
+        "view": 7249
+      },
+      "created_at": "2021-10-26T02:17:31Z"
+    }
+  ]
+}
