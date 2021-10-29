@@ -81,6 +81,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.test:core-ktx:1.4.0'
+
 
     // Unit Test
     testImplementation 'junit:junit:4.+'
@@ -88,6 +90,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.12.4'
     testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
     testImplementation 'org.robolectric:robolectric:4.6'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // UI Test
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
