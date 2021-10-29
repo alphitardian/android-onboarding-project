@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId "com.alphitardian.onboardingproject"
         minSdk 22
-        targetSdk 31
+        targetSdk 30
         versionCode buildVersionCode
         versionName buildVersionName
 
@@ -62,6 +62,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
         useIR = true
+    }
+    testOptions {
+        unitTests.includeAndroidResources = true
     }
     buildFeatures {
         compose true
