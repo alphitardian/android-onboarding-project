@@ -28,7 +28,7 @@ class HomeScreenTest {
                 AppNavigation(startDestination = DESTINATION_LOGIN)
             }
         }
-        getUserLoggedin()
+        getUserLoggedIn()
     }
 
     @After
@@ -36,7 +36,7 @@ class HomeScreenTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
     }
 
-    fun getUserLoggedin() {
+    fun getUserLoggedIn() {
         val emailTextField =
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_email)),
                 true)
