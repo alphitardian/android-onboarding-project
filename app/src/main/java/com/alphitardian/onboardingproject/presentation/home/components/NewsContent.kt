@@ -26,14 +26,15 @@ import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 @Composable
 fun NewsContent(news: List<NewsEntity>?, viewModel: HomeViewModel) {
     LazyColumn(modifier = Modifier
-        .padding(top = 29.dp, start = 17.dp, end = 17.dp)
+        .padding(horizontal = 17.dp)
         .testTag(stringResource(R.string.testtag_home_news_content))
     ) {
         item {
             Text(text = stringResource(id = R.string.home_title),
                 style = TextStyle(fontSize = 18.sp,
                     fontWeight = FontWeight.W700,
-                    color = MaterialTheme.colors.onBackground))
+                    color = MaterialTheme.colors.onBackground),
+                modifier = Modifier.padding(top = 29.dp))
             Text(text = stringResource(id = R.string.home_sub_title),
                 style = TextStyle(color = MaterialTheme.colors.onBackground),
                 modifier = Modifier.padding(bottom = 16.dp))
