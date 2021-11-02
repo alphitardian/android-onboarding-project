@@ -10,8 +10,6 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.entity.New
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.toNewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.toUserEntity
-import com.alphitardian.onboardingproject.data.user.repository.UserRepositoryImpl
-import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
