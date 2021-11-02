@@ -36,7 +36,7 @@ class DecryptTokenUseCaseTest {
     }
 
     @Test
-    fun decryptToken() {
+    fun testEncryptAndDecryptTokenSuccess() {
         runBlocking {
             encryptionResult = encryptUsecase(DummyData.userToken)
 

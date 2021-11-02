@@ -13,6 +13,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.File
 
@@ -31,7 +32,7 @@ class UserRemoteDataSoureTest {
     }
 
     @Test
-    fun getUserProfile() {
+    fun testGetUserProfileSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${BASE_PATH}profile-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -45,7 +46,26 @@ class UserRemoteDataSoureTest {
     }
 
     @Test
-    fun getUserNews() {
+    fun testGetUserProfileFailed_error401() {
+        mockWebServer.enqueue(MockResponse().setResponseCode(401)
+            .setBody(File("${BASE_PATH}user-response-401.json").inputStream().readBytes()
+                .toString(Charsets.UTF_8)))
+
+        runBlocking {
+            try {
+                datasource.getProfile(DummyData.userToken)
+                assert(false)
+            } catch (error: Exception) {
+                if (error is HttpException) {
+                    assertEquals(401, error.code())
+                    assert(true)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testGetUserNewsSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${BASE_PATH}news-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -55,6 +75,25 @@ class UserRemoteDataSoureTest {
             val expected = DummyData.expectedNewsResponse
 
             assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun testGetUserNewsFailed_error401() {
+        mockWebServer.enqueue(MockResponse().setResponseCode(401)
+            .setBody(File("${BASE_PATH}user-response-401.json").inputStream().readBytes()
+                .toString(Charsets.UTF_8)))
+
+        runBlocking {
+            try {
+                datasource.getNews(DummyData.userToken)
+                assert(false)
+            } catch (error: Exception) {
+                if (error is HttpException) {
+                    assertEquals(401, error.code())
+                    assert(true)
+                }
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ class GetNewsUseCaseTest {
     }
 
     @Test
-    fun getNews() {
+    fun testGetNewsSuccess() {
         runBlocking {
             val actual = usecase(DummyData.userToken)
             val expected = DummyData.expectedNewsResponse.data.map { it.toNewsEntity() }

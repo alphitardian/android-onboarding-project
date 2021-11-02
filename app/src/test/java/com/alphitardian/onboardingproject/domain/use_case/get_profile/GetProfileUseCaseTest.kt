@@ -18,7 +18,7 @@ class GetProfileUseCaseTest {
     }
 
     @Test
-    fun getProfile() {
+    fun testGetProfileSuccess() {
         runBlocking {
             val actual = usecase(DummyData.userToken)
             val expected = DummyData.expectedProfileResponse.toUserEntity()

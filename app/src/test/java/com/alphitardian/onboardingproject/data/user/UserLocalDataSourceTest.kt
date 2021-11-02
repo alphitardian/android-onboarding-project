@@ -5,13 +5,15 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.response.
 import com.alphitardian.onboardingproject.utils.DummyData
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
+import java.lang.IndexOutOfBoundsException
 
 class UserLocalDataSourceTest {
     private val dataSource = FakeLocalDataSource()
 
     @Test
-    fun addAndGetUser() {
+    fun testAddAndGetUserProfile() {
         runBlocking {
             val user = DummyData.expectedProfileResponse.toUserEntity()
             dataSource.insertProfile(user)
@@ -21,7 +23,19 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun addAndGetNews() {
+    fun testGetEmptyUserProfile() {
+        runBlocking {
+            try {
+                dataSource.getUserProfile()
+                assert(false)
+            } catch (error: IndexOutOfBoundsException) {
+                assert(true)
+            }
+        }
+    }
+
+    @Test
+    fun testAddAndGetNews() {
         runBlocking {
             val news = DummyData.expectedSingleNewsResponse.toNewsEntity()
             dataSource.insertNews(news)
@@ -31,7 +45,7 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun addAndGetAllNews() {
+    fun testAddAndGetAllNews() {
         runBlocking {
             val news = DummyData.expectedSingleNewsResponse.toNewsEntity()
             for (i in 1..5) {
@@ -39,6 +53,14 @@ class UserLocalDataSourceTest {
             }
             val newsList = dataSource.getNews()
             assertEquals(newsList.size, 5)
+        }
+    }
+
+    @Test
+    fun testGetEmptyNews() {
+        runBlocking {
+            val news = dataSource.getNews()
+            assertEquals(0, news.size)
         }
     }
 }

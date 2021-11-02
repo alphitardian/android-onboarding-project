@@ -18,7 +18,7 @@ class UserLoginUseCaseTest {
     }
 
     @Test
-    fun userLogin() {
+    fun testUserLoginSuccess() {
         runBlocking {
             val requestBody = LoginRequest(password = "tester123", username = "tester")
             val actual = usecase(requestBody)
