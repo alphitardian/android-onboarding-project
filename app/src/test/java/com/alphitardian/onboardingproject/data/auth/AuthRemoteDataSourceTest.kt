@@ -67,7 +67,7 @@ class AuthRemoteDataSourceTest {
     }
 
     @Test
-    fun testLoginFailed_error422_emptyUsername() {
+    fun testLoginFailed_error422() {
         mockWebServer.enqueue(MockResponse().setResponseCode(422)
             .setBody(File("${DummyData.BASE_PATH}login-response-422.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -77,7 +77,7 @@ class AuthRemoteDataSourceTest {
                 val requestBody = LoginRequest("tester123", "")
                 datasource.loginUser(requestBody)
                 assert(false)
-            } catch (error : Exception) {
+            } catch (error: Exception) {
                 if (error is HttpException) {
                     assertEquals(422, error.code())
                     assert(true)
@@ -97,6 +97,25 @@ class AuthRemoteDataSourceTest {
             val expected = DummyData.expectedTokenResponse
 
             assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun testGetNewTokenFailed_error401() {
+        mockWebServer.enqueue(MockResponse().setResponseCode(401)
+            .setBody(File("${DummyData.BASE_PATH}token-response-401.json").inputStream().readBytes()
+                .toString(Charsets.UTF_8)))
+
+        runBlocking {
+            try {
+                datasource.getToken(DummyData.userToken)
+                assert(false)
+            } catch (error: Exception) {
+                if (error is HttpException) {
+                    assertEquals(401, error.code())
+                    assert(true)
+                }
+            }
         }
     }
 }
