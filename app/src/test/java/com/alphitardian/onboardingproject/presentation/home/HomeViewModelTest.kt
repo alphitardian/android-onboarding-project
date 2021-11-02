@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
 import com.alphitardian.onboardingproject.common.Resource
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.toNewsEntity
@@ -18,6 +19,8 @@ import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseC
 import com.alphitardian.onboardingproject.utils.DummyData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,6 +32,9 @@ import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import retrofit2.HttpException
+import retrofit2.Response
+import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
@@ -107,6 +113,32 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun testGetProfileFailed_error401() {
+        runBlocking {
+            val response =
+                File("${DummyData.BASE_PATH}user-response-401.json").inputStream().readBytes()
+                    .toString(Charsets.UTF_8)
+            val exception = HttpException(Response.error<TokenResponse>(401,
+                response.toResponseBody("plain/text".toMediaTypeOrNull())))
+
+            val dummyResponse = MutableLiveData<Resource<UserEntity>>()
+            dummyResponse.value = Resource.Error(error = exception, code = 401)
+
+            Mockito.`when`(profileUseCase.invoke(DummyData.userToken))
+                .thenThrow(exception)
+
+            viewModel.getUserProfile(DummyData.userToken)
+
+            viewModel.profile.observeForever(profileObserver)
+
+            delay(1000)
+
+            Mockito.verify(profileObserver).onChanged(Resource.Loading())
+            Mockito.verify(profileObserver).onChanged(dummyResponse.value)
+        }
+    }
+
+    @Test
     fun testGetNewsSuccess() {
         runBlocking {
             val dummyResponse = MutableLiveData<Resource<List<NewsEntity>>>()
@@ -114,6 +146,32 @@ class HomeViewModelTest {
             dummyResponse.value = Resource.Success<List<NewsEntity>>(data = dummyData)
 
             Mockito.`when`(newsUseCase.invoke(DummyData.userToken)).thenReturn(dummyData)
+
+            viewModel.getUserNews(DummyData.userToken)
+
+            viewModel.news.observeForever(newsObserver)
+
+            delay(1000)
+
+            Mockito.verify(newsObserver).onChanged(Resource.Loading())
+            Mockito.verify(newsObserver).onChanged(dummyResponse.value)
+        }
+    }
+
+    @Test
+    fun testGetNewsFailed_error401() {
+        runBlocking {
+            val response =
+                File("${DummyData.BASE_PATH}user-response-401.json").inputStream().readBytes()
+                    .toString(Charsets.UTF_8)
+            val exception = HttpException(Response.error<TokenResponse>(401,
+                response.toResponseBody("plain/text".toMediaTypeOrNull())))
+
+            val dummyResponse = MutableLiveData<Resource<List<NewsEntity>>>()
+            dummyResponse.value = Resource.Error(error = exception, code = 401)
+
+            Mockito.`when`(newsUseCase.invoke(DummyData.userToken))
+                .thenThrow(exception)
 
             viewModel.getUserNews(DummyData.userToken)
 

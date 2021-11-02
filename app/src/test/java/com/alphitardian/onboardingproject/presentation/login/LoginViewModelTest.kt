@@ -13,6 +13,8 @@ import com.alphitardian.onboardingproject.domain.use_case.user_login.UserLoginUs
 import com.alphitardian.onboardingproject.utils.DummyData
 import com.alphitardian.onboardingproject.utils.FakeAndroidKeyStore
 import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Rule
@@ -25,6 +27,9 @@ import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import retrofit2.HttpException
+import retrofit2.Response
+import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
@@ -76,16 +81,67 @@ class LoginViewModelTest {
             val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
             dummyResponse.value =
                 Resource.Success<TokenResponse>(data = DummyData.expectedTokenResponse)
+            val requestBody = LoginRequest("tester123", "tester")
 
-            viewModel.email.value = "tester"
-            viewModel.password.value = "tester123"
+            viewModel.email.value = requestBody.username
+            viewModel.password.value = requestBody.password
 
-            Mockito.`when`(loginUseCase.invoke(LoginRequest("tester123",
-                "tester"))).thenReturn(DummyData.expectedTokenResponse)
+            Mockito.`when`(loginUseCase.invoke(requestBody))
+                .thenReturn(DummyData.expectedTokenResponse)
 
             viewModel.loginUser()
 
             viewModel.loginState.observeForever(observer)
+
+            Mockito.verify(observer).onChanged(dummyResponse.value)
+        }
+    }
+
+    @Test
+    fun testLoginUserFailed_error401() {
+        runBlocking {
+            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
+            dummyResponse.value = Resource.Error(code = 401)
+            val requestBody = LoginRequest("tester", "tester")
+            val response =
+                File("${DummyData.BASE_PATH}login-response-401.json").inputStream().readBytes()
+                    .toString(Charsets.UTF_8)
+
+            viewModel.email.value = requestBody.username
+            viewModel.password.value = requestBody.password
+
+            Mockito.`when`(loginUseCase.invoke(requestBody))
+                .thenThrow(HttpException(Response.error<TokenResponse>(401,
+                    response.toResponseBody("plain/text".toMediaTypeOrNull()))))
+
+            viewModel.loginUser()
+
+            viewModel.mutableLoginState.observeForever(observer)
+
+            Mockito.verify(observer).onChanged(dummyResponse.value)
+        }
+    }
+
+    @Test
+    fun testLoginUserFailed_error422() {
+        runBlocking {
+            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
+            dummyResponse.value = Resource.Error(code = 422)
+            val requestBody = LoginRequest("", "")
+            val response =
+                File("${DummyData.BASE_PATH}login-response-422.json").inputStream().readBytes()
+                    .toString(Charsets.UTF_8)
+
+            viewModel.email.value = requestBody.username
+            viewModel.password.value = requestBody.password
+
+            Mockito.`when`(loginUseCase.invoke(requestBody))
+                .thenThrow(HttpException(Response.error<TokenResponse>(422,
+                    response.toResponseBody("plain/text".toMediaTypeOrNull()))))
+
+            viewModel.loginUser()
+
+            viewModel.mutableLoginState.observeForever(observer)
 
             Mockito.verify(observer).onChanged(dummyResponse.value)
         }
