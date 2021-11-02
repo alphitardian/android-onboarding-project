@@ -77,7 +77,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginUser() {
+    fun testLoginUserSuccess() {
         runBlocking {
             val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
             dummyResponse.value =

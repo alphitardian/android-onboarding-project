@@ -11,7 +11,7 @@ class UserLocalDataSourceTest {
     private val dataSource = FakeLocalDataSource()
 
     @Test
-    fun addAndGetUser() {
+    fun testAddAndGetUserProfile() {
         runBlocking {
             val user = DummyData.expectedProfileResponse.toUserEntity()
             dataSource.insertProfile(user)
@@ -21,7 +21,7 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun addAndGetNews() {
+    fun testAddAndGetNews() {
         runBlocking {
             val news = DummyData.expectedSingleNewsResponse.toNewsEntity()
             dataSource.insertNews(news)
@@ -31,7 +31,7 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun addAndGetAllNews() {
+    fun testAddAndGetAllNews() {
         runBlocking {
             val news = DummyData.expectedSingleNewsResponse.toNewsEntity()
             for (i in 1..5) {

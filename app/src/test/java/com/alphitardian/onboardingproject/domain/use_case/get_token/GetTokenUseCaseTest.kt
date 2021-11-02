@@ -17,7 +17,7 @@ class GetTokenUseCaseTest {
     }
 
     @Test
-    fun getToken() {
+    fun testGetTokenSuccess() {
         runBlocking {
             val actual = usecase(DummyData.userToken)
             val expected = DummyData.expectedTokenResponse

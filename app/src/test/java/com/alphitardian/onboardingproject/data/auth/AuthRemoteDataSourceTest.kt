@@ -31,7 +31,7 @@ class AuthRemoteDataSourceTest {
     }
 
     @Test
-    fun getTokenResponse() {
+    fun testLoginSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${DummyData.BASE_PATH}token-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -46,7 +46,7 @@ class AuthRemoteDataSourceTest {
     }
 
     @Test
-    fun getNewToken() {
+    fun testGetNewTokenSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${DummyData.BASE_PATH}token-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))

@@ -92,7 +92,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun testGetProfile() {
+    fun testGetProfileSuccess() {
         runBlocking {
             val dummyResponse = MutableLiveData<Resource<UserEntity>>()
             dummyResponse.value =
@@ -115,7 +115,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun testGetNews() {
+    fun testGetNewsSuccess() {
         runBlocking {
             val dummyResponse = MutableLiveData<Resource<List<NewsEntity>>>()
             val dummyData = DummyData.expectedNewsResponse.data.map { it.toNewsEntity() }

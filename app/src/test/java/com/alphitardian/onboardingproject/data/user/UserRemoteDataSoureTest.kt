@@ -31,7 +31,7 @@ class UserRemoteDataSoureTest {
     }
 
     @Test
-    fun getUserProfile() {
+    fun testGetUserProfileSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${BASE_PATH}profile-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -45,7 +45,7 @@ class UserRemoteDataSoureTest {
     }
 
     @Test
-    fun getUserNews() {
+    fun testGetUserNewsSuccess() {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${BASE_PATH}news-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))

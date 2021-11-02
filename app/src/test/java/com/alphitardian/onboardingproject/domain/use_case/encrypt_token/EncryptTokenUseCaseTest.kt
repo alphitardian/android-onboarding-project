@@ -31,7 +31,7 @@ class EncryptTokenUseCaseTest {
     }
 
     @Test
-    fun encryptToken() {
+    fun testEncryptTokenSuccess() {
         val actual = usecase(DummyData.userToken)
 
         assertNotNull(actual)
