@@ -47,9 +47,6 @@ class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
 
     @Mock
-    private lateinit var userRepository: UserRepository
-
-    @Mock
     private lateinit var profileUseCase: GetProfileUseCase
 
     @Mock
@@ -74,7 +71,6 @@ class HomeViewModelTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
 
-        userRepository = Mockito.mock(UserRepositoryImpl::class.java)
         profileUseCase = Mockito.mock(GetProfileUseCase::class.java)
         newsUseCase = Mockito.mock(GetNewsUseCase::class.java)
         tokenUseCase = Mockito.mock(GetTokenUseCase::class.java)
@@ -98,8 +94,6 @@ class HomeViewModelTest {
             dummyResponse.value =
                 Resource.Success<UserEntity>(data = DummyData.expectedProfileResponse.toUserEntity())
 
-            Mockito.`when`(userRepository.getUserProfile(DummyData.userToken))
-                .thenReturn(DummyData.expectedProfileResponse.toUserEntity())
             Mockito.`when`(profileUseCase.invoke(DummyData.userToken))
                 .thenReturn(DummyData.expectedProfileResponse.toUserEntity())
 
@@ -121,7 +115,6 @@ class HomeViewModelTest {
             val dummyData = DummyData.expectedNewsResponse.data.map { it.toNewsEntity() }
             dummyResponse.value = Resource.Success<List<NewsEntity>>(data = dummyData)
 
-            Mockito.`when`(userRepository.getNews(DummyData.userToken)).thenReturn(dummyData)
             Mockito.`when`(newsUseCase.invoke(DummyData.userToken)).thenReturn(dummyData)
 
             viewModel.getUserNews(DummyData.userToken)

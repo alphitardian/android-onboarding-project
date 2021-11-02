@@ -51,9 +51,6 @@ class LoginViewModelTest {
     private lateinit var viewModel: LoginViewModel
 
     @Mock
-    private lateinit var authRepository: AuthRepository
-
-    @Mock
     private lateinit var loginUseCase: UserLoginUseCase
 
     @Mock
@@ -66,7 +63,6 @@ class LoginViewModelTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
 
-        authRepository = Mockito.mock(AuthRepositoryImpl::class.java)
         loginUseCase = Mockito.mock(UserLoginUseCase::class.java)
         encryptTokenUseCase = Mockito.mock(EncryptTokenUseCase::class.java)
         viewModel = LoginViewModel(
@@ -86,9 +82,6 @@ class LoginViewModelTest {
             viewModel.email.value = "tester"
             viewModel.password.value = "tester123"
 
-            Mockito.`when`(authRepository.loginUser(LoginRequest("tester123", "tester")))
-                .thenReturn(
-                    DummyData.expectedTokenResponse)
             Mockito.`when`(loginUseCase.invoke(LoginRequest("tester123",
                 "tester"))).thenReturn(DummyData.expectedTokenResponse)
 

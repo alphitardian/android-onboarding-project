@@ -75,10 +75,10 @@ class LoginViewModel @Inject constructor(
                 ErrorState.ERROR_400 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
                 ErrorState.ERROR_401 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_401.code))
                 ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code))
-                ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
+                ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_UNKNOWN.code))
             }
         } else {
-            mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
+            mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_UNKNOWN.code))
         }
     }
 
