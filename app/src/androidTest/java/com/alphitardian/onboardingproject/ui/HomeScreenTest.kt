@@ -47,11 +47,15 @@ class HomeScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester123")
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester123")
+        }
 
         button.performClick()
     }
@@ -86,51 +90,57 @@ class HomeScreenTest {
 
         profilePicture.assertIsDisplayed()
 
-        userFullName.assertIsDisplayed()
-        userFullName.assert(hasText("Prapto Prawirodirjo"))
+        userFullName.apply {
+            assertIsDisplayed()
+            assert(hasText("Prapto Prawirodirjo"))
+        }
 
-        userBio.assertIsDisplayed()
-        userBio.assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
+        userBio.apply {
+            assertIsDisplayed()
+            assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
+        }
 
-        userWeb.assertIsDisplayed()
-        userWeb.assert(hasText("https://icehousecorp.com"))
+        userWeb.apply {
+            assertIsDisplayed()
+            assert(hasText("https://icehousecorp.com"))
+        }
     }
 
     @Test
     fun testNewsContent() {
         val newsImage =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_image)),
-                true)
+                true).onFirst()
         val newsTitle =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_title)),
-                true)
+                true).onFirst()
         val newsCategory =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_category)),
-                true)
+                true).onFirst()
         val newsDate =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_date)),
-                true)
+                true).onFirst()
         val newsViewCounter =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_view)),
-                true)
+                true).onFirst()
         val newsCommentCounter =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_comment)),
-                true)
+                true).onFirst()
         val newsLikeCounter =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_like)),
-                true)
+                true).onFirst()
         val newsDislikeCounter =
             composeTestRule.onAllNodes(hasTestTag(composeTestRule.activity.getString(R.string.testtag_home_news_dislike)),
-                true)
+                true).onFirst()
 
-        newsImage[0].assertIsDisplayed()
-        newsTitle[0].assertIsDisplayed()
-        newsCategory[0].assertIsDisplayed()
-        newsDate[0].assertIsDisplayed()
-        newsViewCounter[0].assertIsDisplayed()
-        newsCommentCounter[0].assertIsDisplayed()
-        newsLikeCounter[0].assertIsDisplayed()
-        newsDislikeCounter[0].assertIsDisplayed()
+        newsImage.assertIsDisplayed()
+        newsTitle.assertIsDisplayed()
+        newsCategory.assertIsDisplayed()
+        newsDate.assertIsDisplayed()
+        newsViewCounter.assertIsDisplayed()
+        newsCommentCounter.assertIsDisplayed()
+        newsLikeCounter.assertIsDisplayed()
+        newsDislikeCounter.assertIsDisplayed()
     }
 
     @ExperimentalTestApi
