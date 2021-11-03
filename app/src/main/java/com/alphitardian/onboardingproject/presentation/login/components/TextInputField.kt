@@ -13,12 +13,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.ErrorResponse
 
 @Composable
 fun TextInputField(
     title: String,
     isPassword: Boolean,
     value: String,
+    isError: ErrorResponse? = null,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
 ) {
@@ -66,7 +68,13 @@ fun TextInputField(
                     }
                 }
             },
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            isError = isError != null,
         )
+        if (isError != null) {
+            Text(text = isError.fields[0].error,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption)
+        }
     }
 }
