@@ -60,13 +60,17 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
-        emailTextField.assert(hasText("tester"))
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
-        passwordTextField.assert(hasText("tester"))
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
     }
 
     @Test
@@ -80,9 +84,11 @@ class LoginScreenTest {
 
         passwordVisibilityButton.performClick()
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
-        passwordTextField.assert(hasText("tester"))
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
     }
 
     @Test
@@ -110,11 +116,15 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester123")
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester123")
+        }
 
         button.performClick()
 
