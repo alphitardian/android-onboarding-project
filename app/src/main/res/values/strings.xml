@@ -18,6 +18,7 @@
     <string name="testtag_login_button">loginButton</string>
     <string name="testtag_login_password_visibility_icon">passwordVisibilityIcon</string>
     <string name="testtag_login_auth_dialog">authDialog</string>
+    <string name="testtag_login_error_message">textFieldErrorMessage</string>
 
     <!--    Home Screen     -->
     <string name="content_description_profile_image">User profile image</string>

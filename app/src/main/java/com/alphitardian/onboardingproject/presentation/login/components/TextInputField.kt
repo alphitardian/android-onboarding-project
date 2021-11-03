@@ -74,7 +74,9 @@ fun TextInputField(
         if (isError != null) {
             Text(text = isError.fields[0].error,
                 color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption)
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.testTag(stringResource(R.string.testtag_login_error_message))
+            )
         }
     }
 }

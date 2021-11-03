@@ -101,7 +101,10 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                 })
             Spacer(modifier = Modifier.height(53.dp))
             Button(
-                onClick = { viewModel.loginUser() },
+                onClick = {
+                    viewModel.loginUser()
+                    fieldValidation.value = null
+                },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 modifier = Modifier
                     .fillMaxWidth()
