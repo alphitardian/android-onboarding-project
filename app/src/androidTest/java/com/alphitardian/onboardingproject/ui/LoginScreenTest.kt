@@ -105,11 +105,15 @@ class LoginScreenTest {
         val dialog =
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_auth_dialog)))
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
         button.performClick()
 
@@ -128,8 +132,10 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_error_message)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
         button.performClick()
 
@@ -148,8 +154,10 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_error_message)),
                 true)
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
         button.performClick()
 
