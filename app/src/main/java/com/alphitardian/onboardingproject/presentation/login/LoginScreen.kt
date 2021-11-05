@@ -27,6 +27,7 @@ import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.presentation.login.components.AuthenticationAlertDialog
 import com.alphitardian.onboardingproject.presentation.login.components.TextInputField
+import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -35,14 +36,14 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
     val alertDialog = remember { mutableStateOf(false) }
     val fieldValidation = remember { mutableStateOf<ErrorResponse?>(null) }
 
-    when (loginState.value) {
+    when (val loginResource = loginState.value) {
         is Resource.Success -> {
             viewModel.mutableLoginState.value = null
             navigate()
         }
         is Resource.Error -> {
             alertDialog.value = true
-            when ((loginState.value as Resource.Error<TokenResponse>).code) {
+            when (loginResource.code) {
                 ErrorState.ERROR_400.code -> AuthenticationAlertDialog(errorMessage = String.format(
                     stringResource(id = R.string.login_alert_description),
                     ErrorState.ERROR_400.code.toString()),
@@ -52,9 +53,8 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                     ErrorState.ERROR_401.code.toString()),
                     state = alertDialog)
                 ErrorState.ERROR_422.code -> {
-
                     fieldValidation.value =
-                        viewModel.handleFieldValidation((loginState.value as Resource.Error<TokenResponse>).error)
+                        viewModel.handleFieldValidation(loginResource.error)
                 }
                 ErrorState.ERROR_UNKNOWN.code -> AuthenticationAlertDialog(errorMessage = stringResource(
                     id = R.string.login_alert_connection_description),
@@ -73,6 +73,12 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            val textFieldName = fieldValidation.value?.fields?.get(0)?.name
+            val usernameFieldIdentifier =
+                stringResource(id = R.string.label_username).lowercase(Locale.getDefault())
+            val passwordFieldIdentifier =
+                stringResource(id = R.string.label_password).lowercase(Locale.getDefault())
+
             Text(
                 text = stringResource(R.string.login_title),
                 style = TextStyle(fontSize = 28.sp),
@@ -85,7 +91,7 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                 isPassword = false,
                 value = viewModel.email.value,
                 modifier = Modifier.testTag(stringResource(id = R.string.testtag_login_email)),
-                isError = if (fieldValidation.value?.fields?.get(0)?.name == stringResource(id = R.string.label_username).toLowerCase()) fieldValidation.value else null,
+                isError = if (textFieldName == usernameFieldIdentifier) fieldValidation.value else null,
                 onValueChange = { value ->
                     viewModel.email.value = value
                 })
@@ -95,7 +101,7 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                 isPassword = true,
                 value = viewModel.password.value,
                 modifier = Modifier.testTag(stringResource(id = R.string.testtag_login_password)),
-                isError = if (fieldValidation.value?.fields?.get(0)?.name == stringResource(id = R.string.label_password).toLowerCase()) fieldValidation.value else null,
+                isError = if (textFieldName == passwordFieldIdentifier) fieldValidation.value else null,
                 onValueChange = { value ->
                     viewModel.password.value = value
                 })
