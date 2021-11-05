@@ -48,9 +48,9 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
             }
         }) {
             Column {
-                when (profileState.value) {
+                when (val profileResource = profileState.value) {
                     is Resource.Success -> {
-                        TopBar(userProfile = (profileState.value as Resource.Success<UserEntity>).data)
+                        TopBar(userProfile = profileResource.data)
                     }
                     is Resource.Loading -> {
                         LoadingStateIndicator()
@@ -59,10 +59,10 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                         TopBar(userProfile = null)
                     }
                 }
-                when (newsState.value) {
+                when (val newsResource = newsState.value) {
                     is Resource.Success -> {
                         NewsContent(
-                            news = (newsState.value as Resource.Success<List<NewsEntity>>).data,
+                            news = newsResource.data,
                             viewModel = viewModel
                         )
                     }
@@ -72,7 +72,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                     is Resource.Error -> {
                         Box(modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center) {
-                            when ((newsState.value as Resource.Error<List<NewsEntity>>).code) {
+                            when (newsResource.code) {
                                 ErrorState.ERROR_401.code -> Text(text = stringResource(R.string.home_message_auth_failed))
                                 else -> Text(text = stringResource(R.string.home_message_connection_failed))
                             }
