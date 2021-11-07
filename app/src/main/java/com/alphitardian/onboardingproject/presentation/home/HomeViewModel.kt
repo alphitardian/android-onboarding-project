@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
+import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
@@ -101,8 +102,7 @@ class HomeViewModel @Inject constructor(
                 val result = profileUseCase(token)
                 mutableProfile.postValue(Resource.Success<UserResponse>(data = result))
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<UserResponse>(error = it, code = errorCode)
+                val error = Resource.Error<UserResponse>(error = it, code = it.handleErrorCode())
                 mutableProfile.postValue(error)
             }
         }
@@ -115,8 +115,7 @@ class HomeViewModel @Inject constructor(
                 val result = newsUseCase(token)
                 mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<List<NewsItemResponse>>(error = it, code = errorCode)
+                val error = Resource.Error<List<NewsItemResponse>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
             }
         }
@@ -130,41 +129,11 @@ class HomeViewModel @Inject constructor(
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<TokenResponse>(error = it, errorCode)
+                val error = Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
             }
         }
-    }
-
-    private fun handleErrorCode(error: Throwable): Int {
-        var code: Int = 0
-        if (error is HttpException) {
-            val errorMessage = error.localizedMessage
-            val errorCode = errorMessage.split(" ")[1]
-
-            when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                ErrorState.ERROR_401 -> code = errorCode.toInt()
-                ErrorState.ERROR_UNKNOWN -> code = 0
-            }
-        } else {
-            code = 0
-        }
-        return code
-    }
-
-    fun formatNewsCategory(channel: ChannelResponse?): String? {
-        val validCategory = channel?.name?.split("/")?.get(1)?.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-        }
-        return validCategory
-    }
-
-    fun formatNewsDate(date: String?): String? {
-        val localDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yy")
-        return formatter.format(localDate)
     }
 
     private fun dataStoreTransaction(response: TokenResponse) {
