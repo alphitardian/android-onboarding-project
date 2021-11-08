@@ -13,18 +13,17 @@ import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
+import com.alphitardian.onboardingproject.domain.use_case.check_user_login_time.CheckUserLoginTimeUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -34,6 +33,7 @@ class HomeViewModel @Inject constructor(
     private val newsUseCase: GetNewsUseCase,
     private val tokenUseCase: GetTokenUseCase,
     private val encryptTokenUseCase: EncryptTokenUseCase,
+    private val checkUserLoginTimeUseCase: CheckUserLoginTimeUseCase,
     private val datastore: PrefStore,
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
@@ -47,32 +47,12 @@ class HomeViewModel @Inject constructor(
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
 
-    private val HOUR_IN_EPOCH_SECONDS = 3600
-
     init {
         viewModelScope.launch {
-            checkUserLoginTime()
             getUserProfile()
             getUserNews()
-        }
-    }
 
-    private fun checkUserLoginTime() {
-        viewModelScope.launch {
-            val expiredTime = datastore.userExpired.first()
-
-            if (expiredTime >= 0) {
-                val endTime = expiredTime - Date().toInstant().epochSecond
-
-                when {
-                    endTime > HOUR_IN_EPOCH_SECONDS -> isLoggedin.value = true
-                    endTime in 0 until HOUR_IN_EPOCH_SECONDS -> {
-                        getNewToken()
-                        isLoggedin.value = true
-                    }
-                    else -> isLoggedin.value = false
-                }
-            }
+            isLoggedin.value = checkUserLoginTimeUseCase { getNewToken() }
         }
     }
 
