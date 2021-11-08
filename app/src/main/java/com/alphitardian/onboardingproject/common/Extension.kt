@@ -5,14 +5,20 @@ import androidx.annotation.RequiresApi
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import retrofit2.HttpException
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 object Extension {
-    @RequiresApi(Build.VERSION_CODES.O)
     fun String?.formatDate(): String? {
         val localDate = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
         return DateTimeFormatter.ofPattern("dd MMM yy").format(localDate)
+    }
+
+    fun String.toEpochTime(): Long {
+        val localDate = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+        return localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
     }
 
     fun ChannelResponse?.formatCategory(): String? {

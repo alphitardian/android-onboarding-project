@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
+import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
@@ -21,9 +22,6 @@ import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -99,10 +97,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun dataStoreTransaction(response: TokenResponse) {
-        val time = response.expiresTime
-        val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
-        val epochTime = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
-        saveExpiredTime(epochTime)
+        val time = response.expiresTime.toEpochTime()
+        saveExpiredTime(time)
         encryptToken(response.token)
     }
 
