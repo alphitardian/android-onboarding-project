@@ -5,6 +5,7 @@ import com.alphitardian.onboardingproject.BuildConfig
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.network.AuthApi
 import com.alphitardian.onboardingproject.data.interceptor.AuthInterceptor
 import com.alphitardian.onboardingproject.data.user.data_source.remote.network.UserApi
+import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -34,12 +35,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideHttpClient(
-        @ApplicationContext context: Context,
+        datastore: PrefStore,
         decryptTokenUseCase: DecryptTokenUseCase,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addNetworkInterceptor(AuthInterceptor(context, decryptTokenUseCase))
+            .addNetworkInterceptor(AuthInterceptor(datastore, decryptTokenUseCase))
             .addInterceptor(loggingInterceptor)
             .connectTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)

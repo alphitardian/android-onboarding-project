@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.presentation.home
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +18,7 @@ import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCas
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -37,7 +34,7 @@ class HomeViewModel @Inject constructor(
     private val newsUseCase: GetNewsUseCase,
     private val tokenUseCase: GetTokenUseCase,
     private val encryptTokenUseCase: EncryptTokenUseCase,
-    @ApplicationContext context: Context,
+    private val datastore: PrefStore,
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
 
@@ -50,7 +47,6 @@ class HomeViewModel @Inject constructor(
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
 
-    private val datastore = PrefStore(context)
     private val HOUR_IN_EPOCH_SECONDS = 3600
 
     init {
