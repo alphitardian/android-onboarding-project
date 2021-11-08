@@ -8,15 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
-import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
@@ -27,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -41,11 +37,9 @@ class HomeViewModel @Inject constructor(
     private val newsUseCase: GetNewsUseCase,
     private val tokenUseCase: GetTokenUseCase,
     private val encryptTokenUseCase: EncryptTokenUseCase,
-    private val decryptTokenUseCase: DecryptTokenUseCase,
     @ApplicationContext context: Context,
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
-    var userDecryptedToken = mutableStateOf<String?>("")
 
     private var mutableProfile: MutableLiveData<Resource<UserResponse>> = MutableLiveData()
     val profile: LiveData<Resource<UserResponse>> get() = mutableProfile
@@ -61,16 +55,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(1000) // to able to get data from datastore
-
-            val userToken = datastore.userToken.first().toString()
-            val userTokenIV = datastore.tokenInitializationVector.first().toString()
-            userDecryptedToken.value = decryptTokenUseCase(userToken, userTokenIV)
             checkUserLoginTime()
-            userDecryptedToken.value?.let {
-                getUserProfile(it)
-                getUserNews(it)
-            }
+            getUserProfile()
+            getUserNews()
         }
     }
 
@@ -84,9 +71,7 @@ class HomeViewModel @Inject constructor(
                 when {
                     endTime > HOUR_IN_EPOCH_SECONDS -> isLoggedin.value = true
                     endTime in 0 until HOUR_IN_EPOCH_SECONDS -> {
-                        userDecryptedToken.value?.let {
-                            getNewToken(it)
-                        }
+                        getNewToken()
                         isLoggedin.value = true
                     }
                     else -> isLoggedin.value = false
@@ -95,11 +80,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getUserProfile(token: String) {
+    fun getUserProfile() {
         viewModelScope.launch {
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
-                val result = profileUseCase(token)
+                val result = profileUseCase()
                 mutableProfile.postValue(Resource.Success<UserResponse>(data = result))
             }.getOrElse {
                 val error = Resource.Error<UserResponse>(error = it, code = it.handleErrorCode())
@@ -108,24 +93,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getUserNews(token: String) {
+    fun getUserNews() {
         viewModelScope.launch {
             runCatching {
                 mutableNews.postValue(Resource.Loading())
-                val result = newsUseCase(token)
+                val result = newsUseCase()
                 mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
             }.getOrElse {
-                val error = Resource.Error<List<NewsItemResponse>>(error = it, code = it.handleErrorCode())
+                val error =
+                    Resource.Error<List<NewsItemResponse>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
             }
         }
     }
 
-    fun getNewToken(token: String) {
+    fun getNewToken() {
         viewModelScope.launch {
             runCatching {
                 mutableRefreshToken.postValue(Resource.Loading())
-                val result = tokenUseCase(token)
+                val result = tokenUseCase()
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
             }.getOrElse {

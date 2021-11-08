@@ -13,11 +13,11 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) : UserRepository {
-    override suspend fun getUserProfile(userToken: String): UserResponse {
-        return remoteDataSource.getProfile(userToken)
+    override suspend fun getUserProfile(): UserResponse {
+        return remoteDataSource.getProfile()
     }
 
-    override suspend fun getNews(userToken: String): NewsResponse {
-        return remoteDataSource.getNews(userToken)
+    override suspend fun getNews(): NewsResponse {
+        return remoteDataSource.getNews()
     }
 }

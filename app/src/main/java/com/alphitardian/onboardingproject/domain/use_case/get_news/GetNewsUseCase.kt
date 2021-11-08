@@ -6,7 +6,7 @@ import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import javax.inject.Inject
 
 class GetNewsUseCase @Inject constructor(private val repository: UserRepository) {
-    suspend operator fun invoke(userToken: String): NewsResponse {
-        return repository.getNews(userToken)
+    suspend operator fun invoke(): NewsResponse {
+        return repository.getNews()
     }
 }
