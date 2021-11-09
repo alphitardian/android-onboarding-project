@@ -1,10 +1,16 @@
 package com.alphitardian.onboardingproject.presentation.home.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -12,9 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
+import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewsContent() {
+fun NewsContent(news: List<NewsItemResponse>?, viewModel: HomeViewModel) {
     LazyColumn(modifier = Modifier.padding(top = 29.dp, start = 17.dp, end = 17.dp)) {
         item {
             Text(text = stringResource(id = R.string.home_title),
@@ -24,9 +33,14 @@ fun NewsContent() {
             Text(text = stringResource(id = R.string.home_sub_title),
                 style = TextStyle(color = MaterialTheme.colors.onBackground),
                 modifier = Modifier.padding(bottom = 16.dp))
+            if (news?.size == null) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
+                }
+            }
         }
-        items(5) {
-            NewsCardItem()
+        items(news?.size ?: 0) {
+            NewsCardItem(newsItem = news?.get(it), viewModel = viewModel)
         }
     }
 }
