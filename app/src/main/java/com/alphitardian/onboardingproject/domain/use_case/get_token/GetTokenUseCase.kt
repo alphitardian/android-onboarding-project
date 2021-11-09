@@ -5,7 +5,7 @@ import com.alphitardian.onboardingproject.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class GetTokenUseCase @Inject constructor(private val repository: AuthRepository) {
-    suspend operator fun invoke(userToken: String): TokenResponse {
-        return repository.getUserToken(userToken)
+    suspend operator fun invoke(): TokenResponse {
+        return repository.getUserToken()
     }
 }

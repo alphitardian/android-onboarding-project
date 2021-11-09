@@ -11,6 +11,7 @@ import com.alphitardian.onboardingproject.common.Constant.KEY_ALIAS
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -22,16 +23,14 @@ object KeystoreHelper {
         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
         .setRandomizedEncryptionRequired(true)
         .build()
+    var secretKey : SecretKey? = null
 
     fun encrypt(data: ByteArray): HashMap<String, ByteArray> {
         val map = HashMap<String, ByteArray>()
         try {
             keyGenerator.init(keyGenParameterSpec)
-
-            val keyStore = KeyStore.getInstance(KEYSTORE_NAME)
-            keyStore.load(null)
-
-            val secretKey = keyGenerator.generateKey()
+            val key = keyGenerator.generateKey()
+            secretKey = key
 
             val cipher = Cipher.getInstance(CHIPER_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
@@ -53,8 +52,8 @@ object KeystoreHelper {
             keyStore.load(null)
 
             val secretKeyEntry =
-                keyStore.getEntry(KEY_ALIAS, null) as KeyStore.SecretKeyEntry
-            val secretKey = secretKeyEntry.secretKey
+                keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.SecretKeyEntry
+            val secretKey = secretKeyEntry?.secretKey ?: secretKey
 
             val encryptedBytes = Base64.decode(data, Base64.DEFAULT)
             val ivBytes = Base64.decode(iv, Base64.DEFAULT)

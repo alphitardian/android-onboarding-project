@@ -24,7 +24,7 @@ class UserRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val networkHelper: NetworkHelper,
 ) : UserRepository {
-    override suspend fun getUserProfile(userToken: String): UserEntity? {
+    override suspend fun getUserProfile(): UserEntity? {
         var user: UserEntity?
         var response: UserResponse?
         withContext(Dispatchers.IO) {
@@ -32,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(
 
             if (user == null) {
                 if (networkHelper.isNetworkAvailable()) {
-                    response = remoteDataSource.getProfile(userToken)
+                    response = remoteDataSource.getProfile()
                     response?.let { user = it.toUserEntity() }
                     user?.let { localDataSource.insertProfile(it) }
                 }
@@ -41,14 +41,14 @@ class UserRepositoryImpl @Inject constructor(
         return user
     }
 
-    override suspend fun getNews(userToken: String): List<NewsEntity>? {
+    override suspend fun getNews(): List<NewsEntity>? {
         var news: List<NewsEntity>?
         var response: NewsResponse?
         withContext(Dispatchers.IO) {
             news = localDataSource.getNews()
 
             if (networkHelper.isNetworkAvailable()) {
-                response = remoteDataSource.getNews(userToken)
+                response = remoteDataSource.getNews()
                 news?.forEachIndexed { index, newsEntity ->
                     if (newsEntity == response?.data?.get(index)?.toNewsEntity()) {
                         return@withContext
