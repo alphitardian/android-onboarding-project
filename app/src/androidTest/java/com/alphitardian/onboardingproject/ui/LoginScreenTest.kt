@@ -5,9 +5,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.IdlingRegistry
 import com.alphitardian.onboardingproject.MainActivity
 import com.alphitardian.onboardingproject.R
-import com.alphitardian.onboardingproject.common.Constant.DESTINATION_LOGIN
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.navigation.AppNavigation
+import com.alphitardian.onboardingproject.navigation.Destination
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
 import org.junit.After
 import org.junit.Before
@@ -24,7 +24,7 @@ class LoginScreenTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
         composeTestRule.setContent {
             OnboardingProjectTheme {
-                AppNavigation(startDestination = DESTINATION_LOGIN)
+                AppNavigation(startDestination = Destination.DESTINATION_LOGIN.name)
             }
         }
     }
@@ -60,13 +60,17 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
-        emailTextField.assert(hasText("tester"))
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
-        passwordTextField.assert(hasText("tester"))
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
     }
 
     @Test
@@ -80,9 +84,11 @@ class LoginScreenTest {
 
         passwordVisibilityButton.performClick()
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester")
-        passwordTextField.assert(hasText("tester"))
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+            assert(hasText("tester"))
+        }
     }
 
     @Test
@@ -110,11 +116,15 @@ class LoginScreenTest {
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
                 true)
 
-        emailTextField.performClick()
-        emailTextField.performTextInput("tester")
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
 
-        passwordTextField.performClick()
-        passwordTextField.performTextInput("tester123")
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester123")
+        }
 
         button.performClick()
 

@@ -1,5 +1,8 @@
 package com.alphitardian.onboardingproject.data.user.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.alphitardian.onboardingproject.common.NetworkHelper
 import com.alphitardian.onboardingproject.data.user.data_source.local.LocalDataSource
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
@@ -14,37 +17,42 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
+    private val networkHelper: NetworkHelper,
 ) : UserRepository {
-    override suspend fun getUserProfile(userToken: String): UserEntity? {
-        var user : UserEntity?
+    override suspend fun getUserProfile(): UserEntity? {
+        var user: UserEntity?
         var response: UserResponse?
         withContext(Dispatchers.IO) {
             user = localDataSource.getUserProfile()
 
             if (user == null) {
-                response = remoteDataSource.getProfile(userToken)
-                response?.let { user = it.toUserEntity() }
-                user?.let { localDataSource.insertProfile(it) }
+                if (networkHelper.isNetworkAvailable()) {
+                    response = remoteDataSource.getProfile()
+                    response?.let { user = it.toUserEntity() }
+                    user?.let { localDataSource.insertProfile(it) }
+                }
             }
         }
         return user
     }
 
-    override suspend fun getNews(userToken: String): List<NewsEntity>? {
-        var news : List<NewsEntity>?
-        var response : NewsResponse?
+    override suspend fun getNews(): List<NewsEntity>? {
+        var news: List<NewsEntity>?
+        var response: NewsResponse?
         withContext(Dispatchers.IO) {
             news = localDataSource.getNews()
 
-            if (news?.isEmpty() == true || news?.size == 0) {
-                response = remoteDataSource.getNews(userToken)
-
+            if (networkHelper.isNetworkAvailable()) {
+                response = remoteDataSource.getNews()
                 news?.forEachIndexed { index, newsEntity ->
-                    if (newsEntity == response?.data?.get(index)?.toNewsEntity()) return@withContext
+                    if (newsEntity == response?.data?.get(index)?.toNewsEntity()) {
+                        return@withContext
+                    }
                 }
                 news = response?.data?.map {
                     it.toNewsEntity()
