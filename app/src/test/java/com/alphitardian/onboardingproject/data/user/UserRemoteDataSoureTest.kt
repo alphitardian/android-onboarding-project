@@ -37,7 +37,7 @@ class UserRemoteDataSoureTest {
                 .toString(Charsets.UTF_8)))
 
         runBlocking {
-            val actual = datasource.getProfile(DummyData.userToken)
+            val actual = datasource.getProfile()
             val expected = DummyData.expectedProfileResponse
 
             assertEquals(expected, actual)
@@ -51,7 +51,7 @@ class UserRemoteDataSoureTest {
                 .toString(Charsets.UTF_8)))
 
         runBlocking {
-            val actual = datasource.getNews(DummyData.userToken)
+            val actual = datasource.getNews()
             val expected = DummyData.expectedNewsResponse
 
             assertEquals(expected, actual)

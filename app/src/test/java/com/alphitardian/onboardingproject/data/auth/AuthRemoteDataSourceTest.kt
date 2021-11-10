@@ -52,7 +52,7 @@ class AuthRemoteDataSourceTest {
                 .toString(Charsets.UTF_8)))
 
         runBlocking {
-            val actual = datasource.getToken(DummyData.userToken)
+            val actual = datasource.getToken()
             val expected = DummyData.expectedTokenResponse
 
             assertEquals(expected, actual)
