@@ -9,7 +9,7 @@ import org.junit.Test
 
 class GetTokenUseCaseTest {
     private val repository = FakeAuthRepository()
-    private val usecase = GetTokenUseCase(repository)
+    private val getTokenUseCase = GetTokenUseCase(repository)
 
     @After
     fun teardown() {
@@ -19,7 +19,7 @@ class GetTokenUseCaseTest {
     @Test
     fun testGetTokenSuccess() {
         runBlocking {
-            val actual = usecase(DummyData.userToken)
+            val actual = getTokenUseCase()
             val expected = DummyData.expectedTokenResponse
 
             assertEquals(expected, actual)

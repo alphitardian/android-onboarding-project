@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.domain.repository.auth
 
-import com.alphitardian.onboardingproject.data.auth.data_source.remote.RemoteDataSource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.RemoteDataSourceImpl
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.network.AuthApi
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
@@ -38,11 +37,11 @@ class FakeAuthRepository : AuthRepository {
         return datasource.loginUser(requestBody)
     }
 
-    override suspend fun getUserToken(userToken: String): TokenResponse {
+    override suspend fun getUserToken(): TokenResponse {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${DummyData.BASE_PATH}token-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
 
-        return datasource.getToken(userToken)
+        return datasource.getToken()
     }
 }

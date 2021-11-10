@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
+import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.user_login.UserLoginUseCase
 import com.alphitardian.onboardingproject.utils.DummyData
@@ -71,7 +72,7 @@ class LoginViewModelTest {
         viewModel = LoginViewModel(
             loginUseCase = loginUseCase,
             encryptTokenUseCase = encryptTokenUseCase,
-            context = context
+            datastore = PrefStore(context)
         )
     }
 
@@ -92,7 +93,6 @@ class LoginViewModelTest {
             viewModel.loginUser()
 
             viewModel.loginState.observeForever(observer)
-
             Mockito.verify(observer).onChanged(dummyResponse.value)
         }
     }

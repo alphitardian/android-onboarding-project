@@ -10,7 +10,7 @@ import org.junit.Test
 
 class GetNewsUseCaseTest {
     private val repository = FakeUserRepository()
-    private val usecase = GetNewsUseCase(repository)
+    private val getNewsUseCase = GetNewsUseCase(repository)
 
     @After
     fun teardown() {
@@ -20,7 +20,7 @@ class GetNewsUseCaseTest {
     @Test
     fun testGetNewsSuccess() {
         runBlocking {
-            val actual = usecase(DummyData.userToken)
+            val actual = getNewsUseCase()
             val expected = DummyData.expectedNewsResponse.data.map { it.toNewsEntity() }
 
             assertEquals(expected, actual)

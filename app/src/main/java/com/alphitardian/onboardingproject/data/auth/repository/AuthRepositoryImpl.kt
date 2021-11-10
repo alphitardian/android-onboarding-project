@@ -15,7 +15,7 @@ class AuthRepositoryImpl @Inject constructor(private val remoteDataSource: Remot
         return remoteDataSource.loginUser(requestBody)
     }
 
-    override suspend fun getUserToken(userToken: String): TokenResponse {
-        return remoteDataSource.getToken(userToken)
+    override suspend fun getUserToken(): TokenResponse {
+        return remoteDataSource.getToken()
     }
 }

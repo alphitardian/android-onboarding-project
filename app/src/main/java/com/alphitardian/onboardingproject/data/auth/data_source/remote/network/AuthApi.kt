@@ -12,5 +12,5 @@ interface AuthApi {
     suspend fun loginUser(@Body requestBody: LoginRequest): TokenResponse
 
     @GET("auth/token")
-    suspend fun getUserToken(@Header("Authorization") userToken: String): TokenResponse
+    suspend fun getUserToken(): TokenResponse
 }

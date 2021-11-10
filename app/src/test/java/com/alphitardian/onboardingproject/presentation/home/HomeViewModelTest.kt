@@ -11,7 +11,8 @@ import com.alphitardian.onboardingproject.data.user.data_source.local.entity.New
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.toNewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.toUserEntity
-import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
+import com.alphitardian.onboardingproject.datastore.PrefStore
+import com.alphitardian.onboardingproject.domain.use_case.check_user_login_time.CheckUserLoginTimeUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
@@ -63,7 +64,7 @@ class HomeViewModelTest {
     private lateinit var encryptTokenUseCase: EncryptTokenUseCase
 
     @Mock
-    private lateinit var decryptTokenUseCase: DecryptTokenUseCase
+    private lateinit var checkUserLoginTimeUseCase: CheckUserLoginTimeUseCase
 
     @Mock
     private lateinit var profileObserver: Observer<Resource<UserEntity>>
@@ -79,15 +80,15 @@ class HomeViewModelTest {
         newsUseCase = Mockito.mock(GetNewsUseCase::class.java)
         tokenUseCase = Mockito.mock(GetTokenUseCase::class.java)
         encryptTokenUseCase = Mockito.mock(EncryptTokenUseCase::class.java)
-        decryptTokenUseCase = Mockito.mock(DecryptTokenUseCase::class.java)
+        checkUserLoginTimeUseCase = Mockito.mock(CheckUserLoginTimeUseCase::class.java)
 
         viewModel = HomeViewModel(
-            context = context,
             tokenUseCase = tokenUseCase,
             newsUseCase = newsUseCase,
             profileUseCase = profileUseCase,
             encryptTokenUseCase = encryptTokenUseCase,
-            decryptTokenUseCase = decryptTokenUseCase
+            checkUserLoginTimeUseCase = checkUserLoginTimeUseCase,
+            datastore = PrefStore(context)
         )
     }
 
@@ -98,16 +99,13 @@ class HomeViewModelTest {
             dummyResponse.value =
                 Resource.Success<UserEntity>(data = DummyData.expectedProfileResponse.toUserEntity())
 
-            Mockito.`when`(profileUseCase.invoke(DummyData.userToken))
+            Mockito.`when`(profileUseCase.invoke())
                 .thenReturn(DummyData.expectedProfileResponse.toUserEntity())
 
-            viewModel.getUserProfile(DummyData.userToken)
-
-            viewModel.profile.observeForever(profileObserver)
+            viewModel.getUserProfile()
 
             delay(1000)
-
-            Mockito.verify(profileObserver).onChanged(Resource.Loading())
+            viewModel.profile.observeForever(profileObserver)
             Mockito.verify(profileObserver).onChanged(dummyResponse.value)
         }
     }
@@ -124,16 +122,13 @@ class HomeViewModelTest {
             val dummyResponse = MutableLiveData<Resource<UserEntity>>()
             dummyResponse.value = Resource.Error(error = exception, code = 401)
 
-            Mockito.`when`(profileUseCase.invoke(DummyData.userToken))
+            Mockito.`when`(profileUseCase.invoke())
                 .thenThrow(exception)
 
-            viewModel.getUserProfile(DummyData.userToken)
-
-            viewModel.profile.observeForever(profileObserver)
+            viewModel.getUserProfile()
 
             delay(1000)
-
-            Mockito.verify(profileObserver).onChanged(Resource.Loading())
+            viewModel.profile.observeForever(profileObserver)
             Mockito.verify(profileObserver).onChanged(dummyResponse.value)
         }
     }
@@ -145,15 +140,12 @@ class HomeViewModelTest {
             val dummyData = DummyData.expectedNewsResponse.data.map { it.toNewsEntity() }
             dummyResponse.value = Resource.Success<List<NewsEntity>>(data = dummyData)
 
-            Mockito.`when`(newsUseCase.invoke(DummyData.userToken)).thenReturn(dummyData)
+            Mockito.`when`(newsUseCase.invoke()).thenReturn(dummyData)
 
-            viewModel.getUserNews(DummyData.userToken)
-
-            viewModel.news.observeForever(newsObserver)
+            viewModel.getUserNews()
 
             delay(1000)
-
-            Mockito.verify(newsObserver).onChanged(Resource.Loading())
+            viewModel.news.observeForever(newsObserver)
             Mockito.verify(newsObserver).onChanged(dummyResponse.value)
         }
     }
@@ -170,16 +162,13 @@ class HomeViewModelTest {
             val dummyResponse = MutableLiveData<Resource<List<NewsEntity>>>()
             dummyResponse.value = Resource.Error(error = exception, code = 401)
 
-            Mockito.`when`(newsUseCase.invoke(DummyData.userToken))
+            Mockito.`when`(newsUseCase.invoke())
                 .thenThrow(exception)
 
-            viewModel.getUserNews(DummyData.userToken)
-
-            viewModel.news.observeForever(newsObserver)
+            viewModel.getUserNews()
 
             delay(1000)
-
-            Mockito.verify(newsObserver).onChanged(Resource.Loading())
+            viewModel.news.observeForever(newsObserver)
             Mockito.verify(newsObserver).onChanged(dummyResponse.value)
         }
     }

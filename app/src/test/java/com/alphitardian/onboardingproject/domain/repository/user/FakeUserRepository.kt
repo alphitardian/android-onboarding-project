@@ -34,7 +34,7 @@ class FakeUserRepository : UserRepository {
         mockWebServer.shutdown()
     }
 
-    override suspend fun getUserProfile(userToken: String): UserEntity? {
+    override suspend fun getUserProfile(): UserEntity? {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${DummyData.BASE_PATH}profile-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -42,7 +42,7 @@ class FakeUserRepository : UserRepository {
         var userEntity: UserEntity? = null
         runBlocking {
             if (userEntity == null) {
-                val response = remoteDataSource.getProfile(DummyData.userToken)
+                val response = remoteDataSource.getProfile()
                 if (userEntity == response.toUserEntity()) return@runBlocking
                 userEntity = response.toUserEntity()
                 localDataSource.insertProfile(userEntity!!)
@@ -53,7 +53,7 @@ class FakeUserRepository : UserRepository {
         return userEntity
     }
 
-    override suspend fun getNews(userToken: String): List<NewsEntity>? {
+    override suspend fun getNews(): List<NewsEntity>? {
         mockWebServer.enqueue(MockResponse().setResponseCode(200)
             .setBody(File("${DummyData.BASE_PATH}news-response.json").inputStream().readBytes()
                 .toString(Charsets.UTF_8)))
@@ -62,8 +62,7 @@ class FakeUserRepository : UserRepository {
         runBlocking {
             newsList = localDataSource.getNews()
 
-            val response = remoteDataSource.getNews(DummyData.userToken).data
-            println(response)
+            val response = remoteDataSource.getNews().data
 
             newsList?.forEachIndexed { index, entity ->
                 if (entity == response[index].toNewsEntity()) return@runBlocking

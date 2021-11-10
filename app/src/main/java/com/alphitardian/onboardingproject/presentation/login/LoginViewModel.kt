@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.presentation.login
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
+import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.ErrorResponse
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
@@ -18,16 +18,11 @@ import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.user_login.UserLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
 import retrofit2.HttpException
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,15 +30,13 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: UserLoginUseCase,
     private val encryptTokenUseCase: EncryptTokenUseCase,
-    @ApplicationContext context: Context,
+    private val datastore: PrefStore,
 ) : ViewModel() {
     var email = mutableStateOf("")
     var password = mutableStateOf("")
 
     var mutableLoginState: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val loginState: LiveData<Resource<TokenResponse>> get() = mutableLoginState
-
-    private val datastore = PrefStore(context)
 
     init {
         viewModelScope.launch {
@@ -76,7 +69,8 @@ class LoginViewModel @Inject constructor(
             when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
                 ErrorState.ERROR_400 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
                 ErrorState.ERROR_401 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_401.code))
-                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code, error = response.error))
+                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code,
+                    error = response.error))
                 ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_UNKNOWN.code))
             }
         } else {
@@ -84,7 +78,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun handleFieldValidation(error: Throwable?) : ErrorResponse? {
+    fun handleFieldValidation(error: Throwable?): ErrorResponse? {
         if (error is HttpException) {
             val errorBody = error.response()?.errorBody()?.string()
             val errorResponse = Json.decodeFromString<ErrorResponse>(errorBody.toString())
@@ -94,10 +88,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun dataStoreTransaction(response: TokenResponse) {
-        val time = response.expiresTime
-        val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
-        val epochTime = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
-        saveExpiredTime(epochTime)
+        val time = response.expiresTime.toEpochTime()
+        saveExpiredTime(time)
         encryptToken(response.token)
     }
 
