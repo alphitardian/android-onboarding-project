@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.Extension.formatCategory
 import com.alphitardian.onboardingproject.common.Extension.formatDate
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -29,7 +29,7 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewsCardItem(newsItem: NewsItemResponse?, viewModel: HomeViewModel) {
+fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
     Card(elevation = 6.dp,
         modifier = Modifier
             .fillMaxWidth()
@@ -81,16 +81,16 @@ fun NewsCardItem(newsItem: NewsItemResponse?, viewModel: HomeViewModel) {
                 Row(Modifier.padding(top = 11.dp)) {
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_visibility_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_view_icon),
-                        counter = newsItem?.counter?.view ?: 0)
+                        counter = newsItem?.view ?: 0)
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_chat_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_comment_icon),
-                        counter = newsItem?.counter?.comment ?: 0)
+                        counter = newsItem?.comment ?: 0)
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_up_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_like_icon),
-                        counter = newsItem?.counter?.upVote ?: 0)
+                        counter = newsItem?.upVote ?: 0)
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_down_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_dislike_icon),
-                        counter = newsItem?.counter?.downVote ?: 0)
+                        counter = newsItem?.downVote ?: 0)
                 }
             }
         }

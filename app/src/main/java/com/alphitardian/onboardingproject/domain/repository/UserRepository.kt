@@ -1,12 +1,9 @@
 package com.alphitardian.onboardingproject.domain.repository
 
-import androidx.lifecycle.LiveData
-import com.alphitardian.onboardingproject.common.Resource
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
-import retrofit2.Response
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 
 interface UserRepository {
-    suspend fun getUserProfile(): UserResponse
-    suspend fun getNews(): NewsResponse
+    suspend fun getUserProfile(): UserEntity?
+    suspend fun getNews(): List<NewsEntity>?
 }

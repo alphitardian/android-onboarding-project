@@ -11,8 +11,8 @@ import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
 import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
+import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.domain.use_case.check_user_login_time.CheckUserLoginTimeUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
@@ -36,11 +36,11 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
 
-    private var mutableProfile: MutableLiveData<Resource<UserResponse>> = MutableLiveData()
-    val profile: LiveData<Resource<UserResponse>> get() = mutableProfile
+    private var mutableProfile: MutableLiveData<Resource<UserEntity>> = MutableLiveData()
+    val profile: LiveData<Resource<UserEntity>> get() = mutableProfile
 
-    private var mutableNews: MutableLiveData<Resource<List<NewsItemResponse>>> = MutableLiveData()
-    val news: LiveData<Resource<List<NewsItemResponse>>> get() = mutableNews
+    private var mutableNews: MutableLiveData<Resource<List<NewsEntity>>> = MutableLiveData()
+    val news: LiveData<Resource<List<NewsEntity>>> get() = mutableNews
 
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
@@ -55,27 +55,27 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getUserProfile() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
                 val result = profileUseCase()
-                mutableProfile.postValue(Resource.Success<UserResponse>(data = result))
+                result?.let { mutableProfile.postValue(Resource.Success<UserEntity>(data = it)) }
             }.getOrElse {
-                val error = Resource.Error<UserResponse>(error = it, code = it.handleErrorCode())
+                val error = Resource.Error<UserEntity>(error = it, code = it.handleErrorCode())
                 mutableProfile.postValue(error)
             }
         }
     }
 
     fun getUserNews() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase()
-                mutableNews.postValue(Resource.Success<List<NewsItemResponse>>(data = result.data))
+                result?.let { mutableNews.postValue(Resource.Success<List<NewsEntity>>(data = it)) }
             }.getOrElse {
                 val error =
-                    Resource.Error<List<NewsItemResponse>>(error = it, code = it.handleErrorCode())
+                    Resource.Error<List<NewsEntity>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
             }
         }
@@ -89,7 +89,8 @@ class HomeViewModel @Inject constructor(
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
             }.getOrElse {
-                val error = Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
+                val error =
+                    Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
             }

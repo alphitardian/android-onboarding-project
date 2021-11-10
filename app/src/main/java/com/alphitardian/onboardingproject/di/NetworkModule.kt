@@ -2,6 +2,7 @@ package com.alphitardian.onboardingproject.di
 
 import android.content.Context
 import com.alphitardian.onboardingproject.BuildConfig
+import com.alphitardian.onboardingproject.common.NetworkHelper
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.network.AuthApi
 import com.alphitardian.onboardingproject.data.interceptor.AuthInterceptor
 import com.alphitardian.onboardingproject.data.user.data_source.remote.network.UserApi
@@ -66,4 +67,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideUserApiService(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
+
+    @Provides
+    fun provideNetworkHelper(@ApplicationContext context: Context) = NetworkHelper(context)
 }

@@ -2,7 +2,6 @@ package com.alphitardian.onboardingproject.common
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
 import retrofit2.HttpException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -21,13 +20,13 @@ object Extension {
         return localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
     }
 
-    fun ChannelResponse?.formatCategory(): String? {
-        return  this?.name?.split("/")?.get(1)?.replaceFirstChar {
+    fun String?.formatCategory(): String? {
+        return this?.split("/")?.get(1)?.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
     }
 
-    fun Throwable.handleErrorCode() : Int {
+    fun Throwable.handleErrorCode(): Int {
         return if (this is HttpException) {
             val errorMessage = this.localizedMessage
             val errorCode = errorMessage.split(" ")[1]
