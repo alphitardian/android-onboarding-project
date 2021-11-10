@@ -1,7 +1,9 @@
 package com.alphitardian.onboardingproject.presentation.home.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,10 +24,10 @@ fun CounterItem(
     modifier: Modifier = Modifier,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 18.dp)) {
-        Icon(painter = icon,
+        Image(painter = icon,
             contentDescription = iconDescription,
-            tint = Color.Gray,
             modifier = Modifier
+                .size(24.dp)
                 .padding(end = 4.dp))
         Text(text = counter.toString(),
             style = TextStyle(color = Color.Gray,

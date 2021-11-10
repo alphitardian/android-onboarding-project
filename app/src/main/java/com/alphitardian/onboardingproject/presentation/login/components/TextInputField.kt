@@ -13,12 +13,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.ErrorResponse
 
 @Composable
 fun TextInputField(
     title: String,
     isPassword: Boolean,
     value: String,
+    isError: ErrorResponse? = null,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
 ) {
@@ -40,7 +42,8 @@ fun TextInputField(
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.surface,
-                textColor = MaterialTheme.colors.onBackground
+                textColor = MaterialTheme.colors.onBackground,
+                cursorColor = MaterialTheme.colors.onBackground
             ),
             visualTransformation = if (!passwordVisibility && isPassword) {
                 PasswordVisualTransformation()
@@ -65,7 +68,15 @@ fun TextInputField(
                     }
                 }
             },
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            isError = isError != null,
         )
+        if (isError != null) {
+            Text(text = isError.fields[0].error,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.testTag(stringResource(R.string.testtag_login_error_message))
+            )
+        }
     }
 }

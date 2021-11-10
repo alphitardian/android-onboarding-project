@@ -100,19 +100,20 @@ class LoginViewModelTest {
     @Test
     fun testLoginUserFailed_error401() {
         runBlocking {
-            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
-            dummyResponse.value = Resource.Error(code = 401)
-            val requestBody = LoginRequest("tester", "tester")
             val response =
                 File("${DummyData.BASE_PATH}login-response-401.json").inputStream().readBytes()
                     .toString(Charsets.UTF_8)
+            val exception = HttpException(Response.error<TokenResponse>(401,
+                response.toResponseBody("plain/text".toMediaTypeOrNull())))
+
+            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
+            dummyResponse.value = Resource.Error(code = 401)
+            val requestBody = LoginRequest("tester", "tester")
 
             viewModel.email.value = requestBody.username
             viewModel.password.value = requestBody.password
 
-            Mockito.`when`(loginUseCase.invoke(requestBody))
-                .thenThrow(HttpException(Response.error<TokenResponse>(401,
-                    response.toResponseBody("plain/text".toMediaTypeOrNull()))))
+            Mockito.`when`(loginUseCase.invoke(requestBody)).thenThrow(exception)
 
             viewModel.loginUser()
 
@@ -125,19 +126,20 @@ class LoginViewModelTest {
     @Test
     fun testLoginUserFailed_error422() {
         runBlocking {
-            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
-            dummyResponse.value = Resource.Error(code = 422)
-            val requestBody = LoginRequest("", "")
             val response =
                 File("${DummyData.BASE_PATH}login-response-422.json").inputStream().readBytes()
                     .toString(Charsets.UTF_8)
+            val exception = HttpException(Response.error<TokenResponse>(422,
+                response.toResponseBody("plain/text".toMediaTypeOrNull())))
+
+            val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
+            dummyResponse.value = Resource.Error(error = exception, code = 422)
+            val requestBody = LoginRequest("", "")
 
             viewModel.email.value = requestBody.username
             viewModel.password.value = requestBody.password
 
-            Mockito.`when`(loginUseCase.invoke(requestBody))
-                .thenThrow(HttpException(Response.error<TokenResponse>(422,
-                    response.toResponseBody("plain/text".toMediaTypeOrNull()))))
+            Mockito.`when`(loginUseCase.invoke(requestBody)).thenThrow(exception)
 
             viewModel.loginUser()
 

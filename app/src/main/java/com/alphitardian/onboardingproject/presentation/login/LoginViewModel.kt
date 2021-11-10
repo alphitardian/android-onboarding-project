@@ -11,6 +11,7 @@ import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
+import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.ErrorResponse
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.LoginRequest
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
@@ -19,6 +20,8 @@ import com.alphitardian.onboardingproject.domain.use_case.user_login.UserLoginUs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -66,12 +69,22 @@ class LoginViewModel @Inject constructor(
             when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
                 ErrorState.ERROR_400 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_400.code))
                 ErrorState.ERROR_401 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_401.code))
-                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code))
+                ErrorState.ERROR_422 -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_422.code,
+                    error = response.error))
                 ErrorState.ERROR_UNKNOWN -> mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_UNKNOWN.code))
             }
         } else {
             mutableLoginState.postValue(Resource.Error(code = ErrorState.ERROR_UNKNOWN.code))
         }
+    }
+
+    fun handleFieldValidation(error: Throwable?): ErrorResponse? {
+        if (error is HttpException) {
+            val errorBody = error.response()?.errorBody()?.string()
+            val errorResponse = Json.decodeFromString<ErrorResponse>(errorBody.toString())
+            return errorResponse
+        }
+        return null
     }
 
     private fun dataStoreTransaction(response: TokenResponse) {

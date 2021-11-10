@@ -92,16 +92,76 @@ class LoginScreenTest {
     }
 
     @Test
-    fun testLoginFailed() {
+    fun testLoginFailedAuthorizationFailed() {
+        val emailTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_email)),
+                true)
+        val passwordTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
+                true)
         val button =
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
                 true)
         val dialog =
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_auth_dialog)))
 
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
+
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
+
         button.performClick()
 
         dialog.assertIsDisplayed()
+    }
+
+    @Test
+    fun testLoginFieldEmptyPasswordField() {
+        val emailTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_email)),
+                true)
+        val button =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
+                true)
+        val message =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_error_message)),
+                true)
+
+        emailTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
+
+        button.performClick()
+
+        message.assertIsDisplayed()
+    }
+
+    @Test
+    fun testLoginFieldEmptyEmailField() {
+        val passwordTextField =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
+                true)
+        val button =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_button)),
+                true)
+        val message =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_error_message)),
+                true)
+
+        passwordTextField.apply {
+            performClick()
+            performTextInput("tester")
+        }
+
+        button.performClick()
+
+        message.assertIsDisplayed()
     }
 
     @Test

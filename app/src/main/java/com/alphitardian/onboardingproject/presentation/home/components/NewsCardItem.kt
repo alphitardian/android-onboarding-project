@@ -88,19 +88,19 @@ fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
                         .padding(top = 8.dp)
                         .testTag(stringResource(R.string.testtag_home_news_title)))
                 Row(Modifier.padding(top = 11.dp)) {
-                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_visibility_counter_24),
+                    CounterItem(icon = painterResource(id = R.drawable.view_icon),
                         iconDescription = stringResource(id = R.string.content_description_view_icon),
                         counter = newsItem?.view ?: 0,
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_view)))
-                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_chat_counter_24),
+                    CounterItem(icon = painterResource(id = R.drawable.comment_icon),
                         iconDescription = stringResource(id = R.string.content_description_comment_icon),
                         counter = newsItem?.comment ?: 0,
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_comment)))
-                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_up_counter_24),
+                    CounterItem(icon = painterResource(id = R.drawable.thumb_up_icon),
                         iconDescription = stringResource(id = R.string.content_description_like_icon),
                         counter = newsItem?.upVote ?: 0,
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_like)))
-                    CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_down_counter_24),
+                    CounterItem(icon = painterResource(id = R.drawable.thumb_down_icon),
                         iconDescription = stringResource(id = R.string.content_description_dislike_icon),
                         counter = newsItem?.downVote ?: 0,
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_dislike)))
