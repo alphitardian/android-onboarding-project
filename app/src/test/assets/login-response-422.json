@@ -1,0 +1,9 @@
+{
+  "message": "validation-failed",
+  "fields": [
+    {
+      "name": "username",
+      "error": "required and cannot be empty"
+    }
+  ]
+}

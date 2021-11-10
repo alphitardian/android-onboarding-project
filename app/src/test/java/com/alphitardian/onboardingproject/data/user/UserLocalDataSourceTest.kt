@@ -21,6 +21,18 @@ class UserLocalDataSourceTest {
     }
 
     @Test
+    fun testGetEmptyUserProfile() {
+        runBlocking {
+            try {
+                dataSource.getUserProfile()
+                assert(false)
+            } catch (error: IndexOutOfBoundsException) {
+                assert(true)
+            }
+        }
+    }
+
+    @Test
     fun testAddAndGetNews() {
         runBlocking {
             val news = DummyData.expectedSingleNewsResponse.toNewsEntity()
@@ -39,6 +51,14 @@ class UserLocalDataSourceTest {
             }
             val newsList = dataSource.getNews()
             assertEquals(newsList.size, 5)
+        }
+    }
+
+    @Test
+    fun testGetEmptyNews() {
+        runBlocking {
+            val news = dataSource.getNews()
+            assertEquals(0, news.size)
         }
     }
 }
