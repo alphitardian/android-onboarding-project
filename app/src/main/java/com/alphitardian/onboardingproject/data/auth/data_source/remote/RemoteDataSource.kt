@@ -5,5 +5,5 @@ import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.
 
 interface RemoteDataSource {
     suspend fun loginUser(requestBody: LoginRequest): TokenResponse
-    suspend fun getToken(userToken: String): TokenResponse
+    suspend fun getToken(): TokenResponse
 }

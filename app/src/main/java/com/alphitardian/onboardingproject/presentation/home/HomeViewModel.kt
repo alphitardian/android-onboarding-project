@@ -1,6 +1,5 @@
 package com.alphitardian.onboardingproject.presentation.home
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
@@ -8,32 +7,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
+import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
+import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.ChannelResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.datastore.PrefStore
-import com.alphitardian.onboardingproject.domain.use_case.decrypt_token.DecryptTokenUseCase
+import com.alphitardian.onboardingproject.domain.use_case.check_user_login_time.CheckUserLoginTimeUseCase
 import com.alphitardian.onboardingproject.domain.use_case.encrypt_token.EncryptTokenUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_news.GetNewsUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_profile.GetProfileUseCase
 import com.alphitardian.onboardingproject.domain.use_case.get_token.GetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -43,11 +32,10 @@ class HomeViewModel @Inject constructor(
     private val newsUseCase: GetNewsUseCase,
     private val tokenUseCase: GetTokenUseCase,
     private val encryptTokenUseCase: EncryptTokenUseCase,
-    private val decryptTokenUseCase: DecryptTokenUseCase,
-    @ApplicationContext context: Context,
+    private val checkUserLoginTimeUseCase: CheckUserLoginTimeUseCase,
+    private val datastore: PrefStore,
 ) : ViewModel() {
     var isLoggedin = mutableStateOf(true)
-    var userDecryptedToken = mutableStateOf<String?>("")
 
     private var mutableProfile: MutableLiveData<Resource<UserEntity>> = MutableLiveData()
     val profile: LiveData<Resource<UserEntity>> get() = mutableProfile
@@ -58,92 +46,57 @@ class HomeViewModel @Inject constructor(
     private var mutableRefreshToken: MutableLiveData<Resource<TokenResponse>> = MutableLiveData()
     val refreshToken: LiveData<Resource<TokenResponse>> get() = mutableRefreshToken
 
-    private val datastore = PrefStore(context)
-    private val HOUR_IN_EPOCH_SECONDS = 3600
-
     init {
         viewModelScope.launch {
-            EspressoIdlingResource.increment()
-            delay(1000) // to able to get data from datastore
+            getUserProfile()
+            getUserNews()
 
-            val userToken = datastore.userToken.first().toString()
-            val userTokenIV = datastore.tokenInitializationVector.first().toString()
-            userDecryptedToken.value = decryptTokenUseCase(userToken, userTokenIV)
-            checkUserLoginTime()
-            userDecryptedToken.value?.let {
-                getUserProfile(it)
-                getUserNews(it)
-            }
-            EspressoIdlingResource.decrement()
+            isLoggedin.value = checkUserLoginTimeUseCase { getNewToken() }
         }
     }
 
-    private fun checkUserLoginTime() {
-        viewModelScope.launch {
-            EspressoIdlingResource.increment()
-            val expiredTime = datastore.userExpired.first()
-
-            if (expiredTime >= 0) {
-                val endTime = expiredTime - Date().toInstant().epochSecond
-
-                when {
-                    endTime > HOUR_IN_EPOCH_SECONDS -> isLoggedin.value = true
-                    endTime in 0 until HOUR_IN_EPOCH_SECONDS -> {
-                        userDecryptedToken.value?.let {
-                            getNewToken(it)
-                        }
-                        isLoggedin.value = true
-                    }
-                    else -> isLoggedin.value = false
-                }
-            }
-            EspressoIdlingResource.decrement()
-        }
-    }
-
-    fun getUserProfile(token: String) {
+    fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             EspressoIdlingResource.increment()
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
-                val result = profileUseCase(token)
+                val result = profileUseCase()
                 result?.let { mutableProfile.postValue(Resource.Success<UserEntity>(data = it)) }
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<UserEntity>(error = it, code = errorCode)
+                val error = Resource.Error<UserEntity>(error = it, code = it.handleErrorCode())
                 mutableProfile.postValue(error)
             }
             EspressoIdlingResource.decrement()
         }
     }
 
-    fun getUserNews(token: String) {
+    fun getUserNews() {
         viewModelScope.launch(Dispatchers.IO) {
             EspressoIdlingResource.increment()
             runCatching {
                 mutableNews.postValue(Resource.Loading())
-                val result = newsUseCase(token)
+                val result = newsUseCase()
                 result?.let { mutableNews.postValue(Resource.Success<List<NewsEntity>>(data = it)) }
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<List<NewsEntity>>(error = it, code = errorCode)
+                val error =
+                    Resource.Error<List<NewsEntity>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
             }
             EspressoIdlingResource.decrement()
         }
     }
 
-    fun getNewToken(token: String) {
+    fun getNewToken() {
         viewModelScope.launch {
             EspressoIdlingResource.increment()
             runCatching {
                 mutableRefreshToken.postValue(Resource.Loading())
-                val result = tokenUseCase(token)
+                val result = tokenUseCase()
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
             }.getOrElse {
-                val errorCode = handleErrorCode(it)
-                val error = Resource.Error<TokenResponse>(error = it, errorCode)
+                val error =
+                    Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
             }
@@ -151,40 +104,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleErrorCode(error: Throwable): Int {
-        var code: Int = 0
-        if (error is HttpException) {
-            val errorMessage = error.localizedMessage
-            val errorCode = errorMessage.split(" ")[1]
-
-            when (ErrorState.fromRawValue(Integer.parseInt(errorCode))) {
-                ErrorState.ERROR_401 -> code = errorCode.toInt()
-                ErrorState.ERROR_UNKNOWN -> code = 0
-            }
-        } else {
-            code = 0
-        }
-        return code
-    }
-
-    fun formatNewsCategory(channel: String?): String? {
-        val validCategory = channel?.split("/")?.get(1)?.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-        }
-        return validCategory
-    }
-
-    fun formatNewsDate(date: String?): String? {
-        val localDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yy")
-        return formatter.format(localDate)
-    }
-
     private fun dataStoreTransaction(response: TokenResponse) {
-        val time = response.expiresTime
-        val localDate = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME)
-        val epochTime = localDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
-        saveExpiredTime(epochTime)
+        val time = response.expiresTime.toEpochTime()
+        saveExpiredTime(time)
         encryptToken(response.token)
     }
 
