@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.common.Extension.handleErrorCode
 import com.alphitardian.onboardingproject.common.Extension.toEpochTime
 import com.alphitardian.onboardingproject.common.Resource
@@ -56,6 +57,7 @@ class HomeViewModel @Inject constructor(
 
     fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableProfile.postValue(Resource.Loading())
                 val result = profileUseCase()
@@ -64,11 +66,13 @@ class HomeViewModel @Inject constructor(
                 val error = Resource.Error<UserEntity>(error = it, code = it.handleErrorCode())
                 mutableProfile.postValue(error)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     fun getUserNews() {
         viewModelScope.launch(Dispatchers.IO) {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase()
@@ -78,11 +82,13 @@ class HomeViewModel @Inject constructor(
                     Resource.Error<List<NewsEntity>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
             }
+            EspressoIdlingResource.decrement()
         }
     }
 
     fun getNewToken() {
         viewModelScope.launch {
+            EspressoIdlingResource.increment()
             runCatching {
                 mutableRefreshToken.postValue(Resource.Loading())
                 val result = tokenUseCase()
@@ -94,6 +100,7 @@ class HomeViewModel @Inject constructor(
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
             }
+            EspressoIdlingResource.decrement()
         }
     }
 

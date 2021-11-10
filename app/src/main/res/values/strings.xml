@@ -29,4 +29,23 @@
     <string name="home_snackbar_description">An error occured, please try to log in.</string>
     <string name="home_message_auth_failed">Authorization failed.</string>
     <string name="home_message_connection_failed">Please check your connection</string>
+    <string name="testtag_login_email">emailTextField</string>
+    <string name="testtag_login_password">passwordTextField</string>
+    <string name="testtag_login_button">loginButton</string>
+    <string name="testtag_login_password_visibility_icon">passwordVisibilityIcon</string>
+    <string name="testtag_login_auth_dialog">authDialog</string>
+    <string name="testtag_home_topbar">homeTopBar</string>
+    <string name="testtag_home_news_content">homeNewsContent</string>
+    <string name="testtag_home_topbar_profile_picture">topBarProfilePicture</string>
+    <string name="testtag_home_topbar_fullname">topBarUserFullName</string>
+    <string name="testtag_home_topbar_bio">topBarUserBio</string>
+    <string name="testtag_home_topbar_web">topBarUserWeb</string>
+    <string name="testtag_home_news_image">newsImage</string>
+    <string name="testtag_home_news_category">newsCategory</string>
+    <string name="testtag_home_news_date">newsDate</string>
+    <string name="testtag_home_news_title">newsTitle</string>
+    <string name="testtag_home_news_view">newsView</string>
+    <string name="testtag_home_news_comment">newsComments</string>
+    <string name="testtag_home_news_like">newsLikes</string>
+    <string name="testtag_home_news_dislike">newsDislikes</string>
 </resources>

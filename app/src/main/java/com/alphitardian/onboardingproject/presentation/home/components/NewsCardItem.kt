@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,7 +38,9 @@ fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
         Column {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .height(161.dp)) {
+                .height(161.dp)
+                .testTag(stringResource(R.string.testtag_home_news_image))
+            ) {
                 newsItem?.coverImage?.let {
                     GlideImage(
                         imageModel = it,
@@ -67,30 +70,40 @@ fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
                     modifier = Modifier.fillMaxWidth()) {
                     Text(text = newsItem?.channel.formatCategory()
                         ?: stringResource(id = R.string.placeholder_card_category),
-                        style = TextStyle(color = MaterialTheme.colors.secondary, fontSize = 12.sp))
+                        style = TextStyle(color = MaterialTheme.colors.secondary, fontSize = 12.sp),
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_category))
+                    )
                     Text(text = newsItem?.createdTime.formatDate()
                         ?: stringResource(id = R.string.placeholder_card_date),
-                        style = TextStyle(color = Color.Gray, fontSize = 12.sp))
+                        style = TextStyle(color = Color.Gray, fontSize = 12.sp),
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_date))
+                    )
                 }
                 Text(text = newsItem?.title ?: stringResource(id = R.string.placeholder_card_news),
                     maxLines = 2,
                     style = TextStyle(fontSize = 14.sp,
                         fontWeight = FontWeight.W700,
                         color = MaterialTheme.colors.onBackground),
-                    modifier = Modifier.padding(top = 8.dp))
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .testTag(stringResource(R.string.testtag_home_news_title)))
                 Row(Modifier.padding(top = 11.dp)) {
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_visibility_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_view_icon),
-                        counter = newsItem?.view ?: 0)
+                        counter = newsItem?.view ?: 0,
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_view)))
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_chat_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_comment_icon),
-                        counter = newsItem?.comment ?: 0)
+                        counter = newsItem?.comment ?: 0,
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_comment)))
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_up_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_like_icon),
-                        counter = newsItem?.upVote ?: 0)
+                        counter = newsItem?.upVote ?: 0,
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_like)))
                     CounterItem(icon = painterResource(id = R.drawable.ic_outline_thumb_down_counter_24),
                         iconDescription = stringResource(id = R.string.content_description_dislike_icon),
-                        counter = newsItem?.downVote ?: 0)
+                        counter = newsItem?.downVote ?: 0,
+                        modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_dislike)))
                 }
             }
         }

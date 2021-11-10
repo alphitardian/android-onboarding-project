@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,13 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
 import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewsContent(news: List<NewsEntity>?, viewModel: HomeViewModel) {
-    LazyColumn(modifier = Modifier.padding(top = 29.dp, start = 17.dp, end = 17.dp)) {
+    LazyColumn(modifier = Modifier
+        .padding(top = 29.dp, start = 17.dp, end = 17.dp)
+        .testTag(stringResource(R.string.testtag_home_news_content))
+    ) {
         item {
             Text(text = stringResource(id = R.string.home_title),
                 style = TextStyle(fontSize = 18.sp,

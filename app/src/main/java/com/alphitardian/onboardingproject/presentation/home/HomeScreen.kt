@@ -22,8 +22,6 @@ import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.news.NewsItemResponse
-import com.alphitardian.onboardingproject.data.user.data_source.remote.response.user.UserResponse
 import com.alphitardian.onboardingproject.presentation.home.components.NewsAlertDialog
 import com.alphitardian.onboardingproject.presentation.home.components.NewsContent
 import com.alphitardian.onboardingproject.presentation.home.components.TopBar

@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -25,7 +26,6 @@ import com.alphitardian.onboardingproject.common.Resource
 import com.alphitardian.onboardingproject.data.auth.data_source.remote.response.TokenResponse
 import com.alphitardian.onboardingproject.presentation.login.components.AuthenticationAlertDialog
 import com.alphitardian.onboardingproject.presentation.login.components.TextInputField
-import retrofit2.HttpException
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -81,6 +81,7 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                 title = stringResource(R.string.label_email),
                 isPassword = false,
                 value = viewModel.email.value,
+                modifier = Modifier.testTag(stringResource(id = R.string.testtag_login_email)),
                 onValueChange = { value ->
                     viewModel.email.value = value
                 })
@@ -89,6 +90,7 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
                 title = stringResource(R.string.label_password),
                 isPassword = true,
                 value = viewModel.password.value,
+                modifier = Modifier.testTag(stringResource(id = R.string.testtag_login_password)),
                 onValueChange = { value ->
                     viewModel.password.value = value
                 })
@@ -96,7 +98,9 @@ fun LoginScreen(navigate: () -> Unit, viewModel: LoginViewModel = hiltViewModel(
             Button(
                 onClick = { viewModel.loginUser() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(stringResource(id = R.string.testtag_login_button))
             ) {
                 Text(
                     text = stringResource(R.string.button_login),

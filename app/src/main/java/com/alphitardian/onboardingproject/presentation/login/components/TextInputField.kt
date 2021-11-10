@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,6 +19,7 @@ fun TextInputField(
     title: String,
     isPassword: Boolean,
     value: String,
+    modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
@@ -53,7 +55,9 @@ fun TextInputField(
                     val icon =
                         if (passwordVisibility) R.drawable.ic_baseline_visibility_24 else R.drawable.ic_baseline_visibility_off_24
 
-                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility },
+                        modifier = Modifier.testTag(
+                            stringResource(R.string.testtag_login_password_visibility_icon))) {
                         Icon(
                             painter = painterResource(id = icon),
                             contentDescription = stringResource(R.string.content_description_visibility_icon)
@@ -61,7 +65,7 @@ fun TextInputField(
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
         )
     }
 }
