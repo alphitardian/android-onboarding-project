@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId "com.alphitardian.onboardingproject"
         minSdk 22
-        targetSdk 31
+        targetSdk 30
         versionCode buildVersionCode
         versionName buildVersionName
 
@@ -63,6 +63,9 @@ android {
         jvmTarget = '1.8'
         useIR = true
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
     buildFeatures {
         compose true
     }
@@ -78,9 +81,16 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.test:core-ktx:1.4.0'
+
 
     // Unit Test
     testImplementation 'junit:junit:4.+'
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    testImplementation 'org.robolectric:robolectric:4.6'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // UI Test
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

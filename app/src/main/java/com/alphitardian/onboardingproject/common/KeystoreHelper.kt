@@ -16,8 +16,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 @RequiresApi(Build.VERSION_CODES.M)
 object KeystoreHelper {
-    val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_NAME)
-    val keyGenParameterSpec = KeyGenParameterSpec.Builder(KEY_ALIAS,
+    private val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_NAME)
+    private val keyGenParameterSpec = KeyGenParameterSpec.Builder(KEY_ALIAS,
         KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
@@ -33,7 +33,7 @@ object KeystoreHelper {
             secretKey = key
 
             val cipher = Cipher.getInstance(CHIPER_ALGORITHM)
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+            cipher.init(Cipher.ENCRYPT_MODE, key)
             val ivBytes = cipher.iv
             val encryptedBytes = cipher.doFinal(data)
 
