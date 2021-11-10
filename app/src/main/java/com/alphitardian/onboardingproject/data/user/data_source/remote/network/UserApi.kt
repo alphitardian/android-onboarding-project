@@ -7,8 +7,8 @@ import retrofit2.http.Header
 
 interface UserApi {
     @GET("me/profile")
-    suspend fun getUserProfile(@Header("Authorization") userToken: String): UserResponse
+    suspend fun getUserProfile(): UserResponse
 
     @GET("me/news")
-    suspend fun getNews(@Header("Authorization") userToken: String): NewsResponse
+    suspend fun getNews(): NewsResponse
 }

@@ -10,7 +10,7 @@ import org.junit.Test
 
 class GetProfileUseCaseTest {
     private val repository = FakeUserRepository()
-    private val usecase = GetProfileUseCase(repository)
+    private val getProfileUseCase = GetProfileUseCase(repository)
 
     @After
     fun teardown() {
@@ -20,7 +20,7 @@ class GetProfileUseCaseTest {
     @Test
     fun testGetProfileSuccess() {
         runBlocking {
-            val actual = usecase(DummyData.userToken)
+            val actual = getProfileUseCase()
             val expected = DummyData.expectedProfileResponse.toUserEntity()
 
             assertEquals(expected, actual)

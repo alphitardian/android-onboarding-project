@@ -8,11 +8,11 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoteDataSourceImpl @Inject constructor(private val userApi: UserApi) : RemoteDataSource {
-    override suspend fun getProfile(userToken: String): UserResponse {
-        return userApi.getUserProfile("Bearer $userToken")
+    override suspend fun getProfile(): UserResponse {
+        return userApi.getUserProfile()
     }
 
-    override suspend fun getNews(userToken: String): NewsResponse {
-        return userApi.getNews("Bearer $userToken")
+    override suspend fun getNews(): NewsResponse {
+        return userApi.getNews()
     }
 }

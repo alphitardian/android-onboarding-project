@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
+import com.alphitardian.onboardingproject.common.Extension.formatCategory
+import com.alphitardian.onboardingproject.common.Extension.formatDate
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
 import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -66,12 +68,12 @@ fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
             Column(modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp)) {
                 Row(horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()) {
-                    Text(text = viewModel.formatNewsCategory(newsItem?.channel)
+                    Text(text = newsItem?.channel.formatCategory()
                         ?: stringResource(id = R.string.placeholder_card_category),
                         style = TextStyle(color = MaterialTheme.colors.secondary, fontSize = 12.sp),
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_category))
                     )
-                    Text(text = viewModel.formatNewsDate(newsItem?.createdTime)
+                    Text(text = newsItem?.createdTime.formatDate()
                         ?: stringResource(id = R.string.placeholder_card_date),
                         style = TextStyle(color = Color.Gray, fontSize = 12.sp),
                         modifier = Modifier.testTag(stringResource(R.string.testtag_home_news_date))

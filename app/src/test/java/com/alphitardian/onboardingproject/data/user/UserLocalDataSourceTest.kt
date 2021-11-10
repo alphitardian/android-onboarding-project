@@ -5,9 +5,7 @@ import com.alphitardian.onboardingproject.data.user.data_source.remote.response.
 import com.alphitardian.onboardingproject.utils.DummyData
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Test
-import java.lang.IndexOutOfBoundsException
 
 class UserLocalDataSourceTest {
     private val dataSource = FakeLocalDataSource()

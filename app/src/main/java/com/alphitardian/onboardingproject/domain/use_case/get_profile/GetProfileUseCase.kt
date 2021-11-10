@@ -5,7 +5,7 @@ import com.alphitardian.onboardingproject.domain.repository.UserRepository
 import javax.inject.Inject
 
 class GetProfileUseCase @Inject constructor(private val repository: UserRepository) {
-    suspend operator fun invoke(userToken: String): UserEntity? {
-        return repository.getUserProfile(userToken)
+    suspend operator fun invoke(): UserEntity? {
+        return repository.getUserProfile()
     }
 }

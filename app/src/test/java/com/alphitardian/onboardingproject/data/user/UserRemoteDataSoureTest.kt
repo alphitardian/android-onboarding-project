@@ -38,7 +38,7 @@ class UserRemoteDataSoureTest {
                 .toString(Charsets.UTF_8)))
 
         runBlocking {
-            val actual = datasource.getProfile(DummyData.userToken)
+            val actual = datasource.getProfile()
             val expected = DummyData.expectedProfileResponse
 
             assertEquals(expected, actual)
@@ -53,7 +53,7 @@ class UserRemoteDataSoureTest {
 
         runBlocking {
             try {
-                datasource.getProfile(DummyData.userToken)
+                datasource.getProfile()
                 assert(false)
             } catch (error: Exception) {
                 if (error is HttpException) {
@@ -71,7 +71,7 @@ class UserRemoteDataSoureTest {
                 .toString(Charsets.UTF_8)))
 
         runBlocking {
-            val actual = datasource.getNews(DummyData.userToken)
+            val actual = datasource.getNews()
             val expected = DummyData.expectedNewsResponse
 
             assertEquals(expected, actual)
@@ -86,7 +86,7 @@ class UserRemoteDataSoureTest {
 
         runBlocking {
             try {
-                datasource.getNews(DummyData.userToken)
+                datasource.getNews()
                 assert(false)
             } catch (error: Exception) {
                 if (error is HttpException) {
