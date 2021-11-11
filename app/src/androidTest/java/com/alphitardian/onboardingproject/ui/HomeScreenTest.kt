@@ -1,5 +1,6 @@
 package com.alphitardian.onboardingproject.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -15,6 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalAnimationApi
 class HomeScreenTest {
 
     @get:Rule

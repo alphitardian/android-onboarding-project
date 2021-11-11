@@ -1,5 +1,6 @@
 package com.alphitardian.onboardingproject.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.IdlingRegistry
@@ -14,6 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalAnimationApi
 class LoginScreenTest {
 
     @get:Rule
@@ -59,6 +61,11 @@ class LoginScreenTest {
         val passwordTextField =
             composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password)),
                 true)
+        val passwordVisibilityButton =
+            composeTestRule.onNode(hasTestTag(composeTestRule.activity.getString(R.string.testtag_login_password_visibility_icon)),
+                true)
+
+        passwordVisibilityButton.performClick()
 
         emailTextField.apply {
             performClick()

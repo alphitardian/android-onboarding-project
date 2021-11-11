@@ -117,7 +117,8 @@ dependencies {
     implementation "androidx.datastore:datastore:1.0.0"
 
     // Navigation
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
+    implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.21.2-beta"
 
     // Dagger Hilt
     implementation "com.google.dagger:hilt-android:2.38.1"

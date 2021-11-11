@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import com.alphitardian.onboardingproject.datastore.PrefStore
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalAnimationApi
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
