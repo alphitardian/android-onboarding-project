@@ -21,7 +21,7 @@ abstract class FakeDatastore {
 
     @Before
     fun createDatastore() {
-        scope = CoroutineScope(Dispatchers.IO + Job())
+        scope = CoroutineScope(Dispatchers.IO)
         datastore = PreferenceDataStoreFactory.create(scope = scope) {
             InstrumentationRegistry.getInstrumentation().targetContext.preferencesDataStoreFile(
                 "test-datastore"
