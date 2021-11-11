@@ -5,8 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import com.alphitardian.onboardingproject.presentation.home.HomeScreen
 import com.alphitardian.onboardingproject.presentation.login.LoginScreen
@@ -44,9 +42,9 @@ fun AppNavigation(startDestination: String) {
         ) {
             LoginScreen(navigate = {
                 navController.navigate(Destination.DESTINATION_HOME.name) {
-//                    popUpTo(Destination.DESTINATION_LOGIN.name) {
-//                        inclusive = true
-//                    }
+                    popUpTo(Destination.DESTINATION_LOGIN.name) {
+                        inclusive = true
+                    }
                 }
             })
         }
