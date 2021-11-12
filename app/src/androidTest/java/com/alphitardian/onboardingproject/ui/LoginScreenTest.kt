@@ -1,5 +1,6 @@
 package com.alphitardian.onboardingproject.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.espresso.IdlingRegistry
@@ -14,6 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalAnimationApi
 class LoginScreenTest {
 
     @get:Rule
@@ -56,6 +58,9 @@ class LoginScreenTest {
             assert(hasText("tester"))
         }
 
+        val passwordVisibilityButtonTag = composeTestRule.activity.getString(R.string.testtag_login_password_visibility_icon)
+        composeTestRule.onNode(hasTestTag(passwordVisibilityButtonTag), true).performClick()
+
         val passwordTextFieldTag = composeTestRule.activity.getString(R.string.testtag_login_password)
         composeTestRule.onNode(hasTestTag(passwordTextFieldTag), true).apply {
             assertIsDisplayed()
@@ -67,6 +72,9 @@ class LoginScreenTest {
 
     @Test
     fun testTogglePasswordVisibility() {
+        val passwordVisibilityButtonTag = composeTestRule.activity.getString(R.string.testtag_login_password_visibility_icon)
+        composeTestRule.onNode(hasTestTag(passwordVisibilityButtonTag), true).performClick()
+
         val passwordTextFieldTag = composeTestRule.activity.getString(R.string.testtag_login_password)
         composeTestRule.onNode(hasTestTag(passwordTextFieldTag), true).apply {
             assertIsDisplayed()
@@ -74,9 +82,6 @@ class LoginScreenTest {
             performTextInput("tester")
             assert(hasText("tester"))
         }
-
-        val passwordVisibilityButtonTag = composeTestRule.activity.getString(R.string.testtag_login_password_visibility_icon)
-        composeTestRule.onNode(hasTestTag(passwordVisibilityButtonTag), true).performClick()
     }
 
     @Test
