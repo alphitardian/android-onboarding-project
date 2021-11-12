@@ -14,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -49,6 +50,7 @@ object NetworkModule {
             .build()
     }
 
+    @ExperimentalSerializationApi
     @Provides
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {

@@ -11,7 +11,7 @@ import com.alphitardian.onboardingproject.R
 @Composable
 fun NewsAlertDialog(errorMessage: String, confirmOnClick: () -> Unit) {
     AlertDialog(
-        onDismissRequest = { null },
+        onDismissRequest = { },
         title = {
             Text(text = stringResource(R.string.home_alert_title),
                 color = MaterialTheme.colors.onBackground)
