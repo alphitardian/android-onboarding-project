@@ -35,6 +35,8 @@ class UserRepositoryImpl @Inject constructor(
                     response = remoteDataSource.getProfile()
                     response?.let { user = it.toUserEntity() }
                     user?.let { localDataSource.insertProfile(it) }
+                } else {
+                    throw NullPointerException()
                 }
             }
         }
@@ -60,6 +62,8 @@ class UserRepositoryImpl @Inject constructor(
                 news?.map {
                     localDataSource.insertNews(it)
                 }
+            } else {
+                throw NullPointerException()
             }
         }
         return news
