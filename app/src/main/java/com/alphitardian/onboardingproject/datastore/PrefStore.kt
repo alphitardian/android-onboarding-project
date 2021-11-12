@@ -20,9 +20,10 @@ private val USER_EXPIRED = longPreferencesKey(name = "user_expired")
 private val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
 
 @Singleton
-class PrefStore @Inject constructor(@ApplicationContext context: Context) {
-    private val settingDataStore = context.datastore
-
+class PrefStore @Inject constructor(
+    @ApplicationContext context: Context,
+    private val settingDataStore: DataStore<Preferences> = context.datastore,
+) {
     val userToken = settingDataStore.data.map { preference ->
         val token = preference[USER_TOKEN] ?: ""
         token
