@@ -28,11 +28,13 @@ object Extension {
 
     fun Throwable.handleErrorCode(): Int {
         return if (this is HttpException) {
-            val errorMessage = this.localizedMessage
+            val errorMessage = this.localizedMessage ?: ""
             val errorCode = errorMessage.split(" ")[1]
 
             when (ErrorState.fromRawValue(errorCode.toInt())) {
+                ErrorState.ERROR_400 -> errorCode.toInt()
                 ErrorState.ERROR_401 -> errorCode.toInt()
+                ErrorState.ERROR_422 -> errorCode.toInt()
                 ErrorState.ERROR_UNKNOWN -> 0
                 else -> 0
             }

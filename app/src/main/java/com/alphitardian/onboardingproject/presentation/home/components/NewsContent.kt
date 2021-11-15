@@ -20,11 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
-import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewsContent(news: List<NewsEntity>?, viewModel: HomeViewModel) {
+fun NewsContent(news: List<NewsEntity>?) {
     LazyColumn(modifier = Modifier
         .padding(horizontal = 17.dp)
         .testTag(stringResource(R.string.testtag_home_news_content))
@@ -45,7 +44,7 @@ fun NewsContent(news: List<NewsEntity>?, viewModel: HomeViewModel) {
             }
         }
         items(news?.size ?: 0) {
-            NewsCardItem(newsItem = news?.get(it), viewModel = viewModel)
+            NewsCardItem(newsItem = news?.get(it))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.alphitardian.onboardingproject.presentation.home
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -20,13 +21,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.ErrorState
 import com.alphitardian.onboardingproject.common.Resource
-import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
-import com.alphitardian.onboardingproject.data.user.data_source.local.entity.UserEntity
 import com.alphitardian.onboardingproject.presentation.home.components.NewsAlertDialog
 import com.alphitardian.onboardingproject.presentation.home.components.NewsContent
 import com.alphitardian.onboardingproject.presentation.home.components.TopBar
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
@@ -59,10 +59,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                 }
                 when (val newsResource = newsState.value) {
                     is Resource.Success -> {
-                        NewsContent(
-                            news = newsResource.data,
-                            viewModel = viewModel
-                        )
+                        NewsContent(news = newsResource.data)
                     }
                     is Resource.Loading -> {
                         LoadingStateIndicator()

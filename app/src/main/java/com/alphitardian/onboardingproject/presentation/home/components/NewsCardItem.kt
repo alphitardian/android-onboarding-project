@@ -22,7 +22,6 @@ import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.Extension.formatCategory
 import com.alphitardian.onboardingproject.common.Extension.formatDate
 import com.alphitardian.onboardingproject.data.user.data_source.local.entity.NewsEntity
-import com.alphitardian.onboardingproject.presentation.home.HomeViewModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.skydoves.landscapist.ShimmerParams
@@ -30,7 +29,7 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NewsCardItem(newsItem: NewsEntity?, viewModel: HomeViewModel) {
+fun NewsCardItem(newsItem: NewsEntity?) {
     Card(elevation = 6.dp,
         modifier = Modifier
             .fillMaxWidth()
