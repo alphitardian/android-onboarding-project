@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
+    id 'jacoco'
 }
 
 def keystoreProperties = new Properties()
@@ -52,7 +53,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard/retrofit.pro'
         }
         debug {
-            minifyEnabled false
+            testCoverageEnabled true
         }
     }
     compileOptions {
@@ -65,6 +66,12 @@ android {
     }
     testOptions {
         unitTests.includeAndroidResources = true
+//        unitTests.all {
+//            jacoco {
+//                includeNoLocationClasses = true
+//            }
+//        }
+//        unitTests.returnDefaultValues = true
     }
     buildFeatures {
         compose true
@@ -79,6 +86,24 @@ android {
         }
     }
 }
+
+//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//
+//    def fileFilter = ['**/R.class', '**/R$.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+//    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+//    def mainSrc = "${project.projectDir}/src/main/java"
+//
+//    sourceDirectories.setFrom(files([mainSrc]))
+//    classDirectories.setFrom(files([debugTree]))
+//    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+//            "jacoco/testDebugUnitTest.exec",
+//            "outputs/code-coverage/connected/*coverage.ec"
+//    ]))
+//}
 
 dependencies {
     implementation 'androidx.test:core-ktx:1.4.0'
