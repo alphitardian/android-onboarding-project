@@ -107,7 +107,7 @@ class LoginViewModelTest {
                 response.toResponseBody("plain/text".toMediaTypeOrNull())))
 
             val dummyResponse = MutableLiveData<Resource<TokenResponse>>()
-            dummyResponse.value = Resource.Error(code = 401)
+            dummyResponse.value = Resource.Error(error = exception, code = 401)
             val requestBody = LoginRequest("tester", "tester")
 
             viewModel.email.value = requestBody.username
