@@ -68,9 +68,6 @@ class HomeScreenTest {
     fun testTopBarData() {
         Thread.sleep(1000)
 
-        val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
-        composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
-
         val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
         composeTestRule.onNode(hasTestTag(userFullNameTag), true)
             .assertIsDisplayed()
@@ -85,6 +82,9 @@ class HomeScreenTest {
         composeTestRule.onNode(hasTestTag(userWebTag), true)
             .assertIsDisplayed()
             .assert(hasText("https://icehousecorp.com"))
+
+        val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
+        composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
     }
 
     @Test
