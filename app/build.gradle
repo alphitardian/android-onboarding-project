@@ -51,7 +51,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard/retrofit.pro'
@@ -69,7 +69,6 @@ android {
         useIR = true
     }
     testOptions {
-//        execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
         unitTests.includeAndroidResources = true
         unitTests.all {
@@ -142,7 +141,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
-//    androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 
     // Android libs
     implementation 'androidx.core:core-ktx:1.6.0'
