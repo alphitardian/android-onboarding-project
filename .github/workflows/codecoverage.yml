@@ -27,6 +27,11 @@ jobs:
           
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+        
+      - name: Setup Keystore
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > keystore-properties.b64
+          base64 -d keystore-properties.b64 > keystore.properties
 
        # Execute unit tests
       - name: Unit Test with Android Emulator Runner
