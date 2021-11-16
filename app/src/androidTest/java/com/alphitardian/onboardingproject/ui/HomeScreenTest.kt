@@ -11,6 +11,7 @@ import com.alphitardian.onboardingproject.common.EspressoIdlingResource
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.navigation.Destination
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
+import kotlinx.coroutines.delay
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -65,6 +66,8 @@ class HomeScreenTest {
 
     @Test
     fun testTopBarData() {
+        Thread.sleep(1000)
+
         val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
         composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertIsDisplayed()
 
