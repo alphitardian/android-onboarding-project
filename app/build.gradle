@@ -8,6 +8,10 @@ plugins {
     id 'jacoco'
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('keystore.properties')
 if (keystorePropertiesFile.exists()) {
@@ -65,13 +69,16 @@ android {
         useIR = true
     }
     testOptions {
+//        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
         unitTests.includeAndroidResources = true
-//        unitTests.all {
-//            jacoco {
-//                includeNoLocationClasses = true
-//            }
-//        }
-//        unitTests.returnDefaultValues = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
+        }
+        unitTests.returnDefaultValues = true
     }
     buildFeatures {
         compose true
@@ -87,23 +94,36 @@ android {
     }
 }
 
-//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-//    reports {
-//        xml.enabled = true
-//        html.enabled = true
-//    }
-//
-//    def fileFilter = ['**/R.class', '**/R$.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-//    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-//    def mainSrc = "${project.projectDir}/src/main/java"
-//
-//    sourceDirectories.setFrom(files([mainSrc]))
-//    classDirectories.setFrom(files([debugTree]))
-//    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
-//            "jacoco/testDebugUnitTest.exec",
-//            "outputs/code-coverage/connected/*coverage.ec"
-//    ]))
-//}
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.from(files([mainSrc]))
+    classDirectories.from(files([debugTree]))
+    executionData.from = files([
+            "$project.projectDir/jacoco.exec",
+            fileTree(dir: project.buildDir, includes: [
+                    "outputs/code_coverage/debugAndroidTest/connected/**/*.ec"
+            ])
+    ])
+}
 
 dependencies {
     implementation 'androidx.test:core-ktx:1.4.0'
@@ -122,6 +142,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+//    androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 
     // Android libs
     implementation 'androidx.core:core-ktx:1.6.0'
