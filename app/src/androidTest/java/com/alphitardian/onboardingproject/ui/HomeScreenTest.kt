@@ -69,7 +69,7 @@ class HomeScreenTest {
         Thread.sleep(1000)
 
         val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
-        composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
 
         val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
         composeTestRule.onNode(hasTestTag(userFullNameTag), true)
