@@ -130,9 +130,10 @@ class HomeScreenTest {
             .assertIsDisplayed()
     }
 
-    @ExperimentalTestApi
     @Test
     fun testScrollNewsContent() {
+        Thread.sleep(1000)
+
         val newsContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
         composeTestRule.onNode(hasTestTag(newsContentTag))
             .performGesture {
@@ -142,9 +143,5 @@ class HomeScreenTest {
                     durationMillis = 1000
                 )
             }
-
-        Thread.sleep(2000) // simulate reading news
-
-        composeTestRule.onNode(hasTestTag(newsContentTag)).performScrollToIndex(0)
     }
 }
