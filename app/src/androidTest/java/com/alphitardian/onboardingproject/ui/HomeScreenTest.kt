@@ -8,7 +8,6 @@ import androidx.test.espresso.IdlingRegistry
 import com.alphitardian.onboardingproject.MainActivity
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
-import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.navigation.Destination
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
@@ -27,10 +26,6 @@ class HomeScreenTest {
 
     @Before
     fun setup() {
-        runBlocking {
-            val datastore = PrefStore(composeTestRule.activity)
-            datastore.clear()
-        }
         IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
         composeTestRule.setContent {
             OnboardingProjectTheme {
@@ -72,68 +67,74 @@ class HomeScreenTest {
 
     @Test
     fun testTopBarData() {
-        Thread.sleep(1000)
+        runBlocking {
+            val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
+            composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
 
-        val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
-        composeTestRule.onNode(hasTestTag(userFullNameTag), true)
-            .assertIsDisplayed()
-            .assert(hasText("Prapto Prawirodirjo"))
+            val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
+            composeTestRule.onNode(hasTestTag(userFullNameTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("Prapto Prawirodirjo"))
 
-        val userBioTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_bio)
-        composeTestRule.onNode(hasTestTag(userBioTag), true)
-            .assertIsDisplayed()
-            .assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
+            val userBioTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_bio)
+            composeTestRule.onNode(hasTestTag(userBioTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
 
-        val userWebTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_web)
-        composeTestRule.onNode(hasTestTag(userWebTag), true)
-            .assertIsDisplayed()
-            .assert(hasText("https://icehousecorp.com"))
+            val userWebTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_web)
+            composeTestRule.onNode(hasTestTag(userWebTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("https://icehousecorp.com"))
 
-        val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
-        composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
+            delay(1000)
+        }
     }
 
     @Test
     fun testNewsContent() {
-        val newsImageTag = composeTestRule.activity.getString(R.string.testtag_home_news_image)
-        composeTestRule.onAllNodes(hasTestTag(newsImageTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+        runBlocking {
+            val newsImageTag = composeTestRule.activity.getString(R.string.testtag_home_news_image)
+            composeTestRule.onAllNodes(hasTestTag(newsImageTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsTitleTag = composeTestRule.activity.getString(R.string.testtag_home_news_title)
-        composeTestRule.onAllNodes(hasTestTag(newsTitleTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsTitleTag = composeTestRule.activity.getString(R.string.testtag_home_news_title)
+            composeTestRule.onAllNodes(hasTestTag(newsTitleTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsCategoryTag = composeTestRule.activity.getString(R.string.testtag_home_news_category)
-        composeTestRule.onAllNodes(hasTestTag(newsCategoryTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsCategoryTag = composeTestRule.activity.getString(R.string.testtag_home_news_category)
+            composeTestRule.onAllNodes(hasTestTag(newsCategoryTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsDateTag = composeTestRule.activity.getString(R.string.testtag_home_news_date)
-        composeTestRule.onAllNodes(hasTestTag(newsDateTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsDateTag = composeTestRule.activity.getString(R.string.testtag_home_news_date)
+            composeTestRule.onAllNodes(hasTestTag(newsDateTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsViewCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_view)
-        composeTestRule.onAllNodes(hasTestTag(newsViewCounterTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsViewCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_view)
+            composeTestRule.onAllNodes(hasTestTag(newsViewCounterTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsCommentCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_comment)
-        composeTestRule.onAllNodes(hasTestTag(newsCommentCounterTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsCommentCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_comment)
+            composeTestRule.onAllNodes(hasTestTag(newsCommentCounterTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsLikeCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_like)
-        composeTestRule.onAllNodes(hasTestTag(newsLikeCounterTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsLikeCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_like)
+            composeTestRule.onAllNodes(hasTestTag(newsLikeCounterTag), true)
+                .onFirst()
+                .assertIsDisplayed()
 
-        val newsDislikeCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_dislike)
-        composeTestRule.onAllNodes(hasTestTag(newsDislikeCounterTag), true)
-            .onFirst()
-            .assertIsDisplayed()
+            val newsDislikeCounterTag = composeTestRule.activity.getString(R.string.testtag_home_news_dislike)
+            composeTestRule.onAllNodes(hasTestTag(newsDislikeCounterTag), true)
+                .onFirst()
+                .assertIsDisplayed()
+
+            delay(1000)
+        }
     }
 
     @Test
