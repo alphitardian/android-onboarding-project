@@ -42,12 +42,6 @@ class HomeScreenTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
     }
 
-    @Test
-    fun testHomeScreen() {
-        testTopBarData()
-        testNewsContent()
-    }
-
     private fun getUserLoggedIn() {
         runBlocking {
             val emailTag = composeTestRule.activity.getString(R.string.testtag_login_email)
@@ -71,6 +65,7 @@ class HomeScreenTest {
         }
     }
 
+    @Test
     fun testTopBarData() {
         runBlocking {
             val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
@@ -89,6 +84,7 @@ class HomeScreenTest {
         }
     }
 
+    @Test
     fun testNewsContent() {
         runBlocking {
             val homeTag = composeTestRule.activity.getString(R.string.testtag_home_content)
