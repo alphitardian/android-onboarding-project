@@ -8,10 +8,12 @@ import androidx.test.espresso.IdlingRegistry
 import com.alphitardian.onboardingproject.MainActivity
 import com.alphitardian.onboardingproject.R
 import com.alphitardian.onboardingproject.common.EspressoIdlingResource
+import com.alphitardian.onboardingproject.datastore.PrefStore
 import com.alphitardian.onboardingproject.navigation.AppNavigation
 import com.alphitardian.onboardingproject.navigation.Destination
 import com.alphitardian.onboardingproject.ui.theme.OnboardingProjectTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +27,10 @@ class HomeScreenTest {
 
     @Before
     fun setup() {
+        runBlocking {
+            val datastore = PrefStore(composeTestRule.activity)
+            datastore.clear()
+        }
         IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
         composeTestRule.setContent {
             OnboardingProjectTheme {
