@@ -42,6 +42,14 @@ class HomeScreenTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
     }
 
+    @Test
+    fun testHomeScreen() {
+        testInitialUiState()
+        testTopBarData()
+        testNewsContent()
+        testScrollNewsContent()
+    }
+
     private fun getUserLoggedIn() {
         runBlocking {
             val emailTag = composeTestRule.activity.getString(R.string.testtag_login_email)
@@ -65,7 +73,6 @@ class HomeScreenTest {
         }
     }
 
-    @Test
     @Ignore("Still have some issue for jacoco")
     fun testInitialUiState() {
         val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
@@ -81,7 +88,6 @@ class HomeScreenTest {
         composeTestRule.onNodeWithText(homeDescTag, useUnmergedTree = true).assertIsDisplayed()
     }
 
-    @Test
     @Ignore("Still have some issue for jacoco")
     fun testTopBarData() {
         runBlocking {
@@ -107,7 +113,6 @@ class HomeScreenTest {
         }
     }
 
-    @Test
     fun testNewsContent() {
         runBlocking {
             val newsImageTag = composeTestRule.activity.getString(R.string.testtag_home_news_image)
@@ -154,7 +159,6 @@ class HomeScreenTest {
         }
     }
 
-    @Test
     fun testScrollNewsContent() {
         Thread.sleep(1000)
 
