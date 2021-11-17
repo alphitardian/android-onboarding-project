@@ -65,11 +65,15 @@ class HomeScreenTest {
     }
 
     private fun testInitialUiState() {
-        val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
-        composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
+        runBlocking {
+            val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
+            composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
-        val newsContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
-        composeTestRule.onNode(hasTestTag(newsContentTag), true).assertIsDisplayed()
+            delay(1000)
+
+            val newsContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
+            composeTestRule.onNode(hasTestTag(newsContentTag), true).assertIsDisplayed()
+        }
     }
 
     private fun testTopBarData() {

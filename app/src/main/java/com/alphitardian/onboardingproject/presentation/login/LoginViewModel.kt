@@ -53,11 +53,12 @@ class LoginViewModel @Inject constructor(
                 val result = loginUseCase(body)
                 dataStoreTransaction(result)
                 mutableLoginState.postValue(Resource.Success<TokenResponse>(data = result))
+                EspressoIdlingResource.decrement()
             }.getOrElse {
                 val error = Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
                 mutableLoginState.postValue(error)
+                EspressoIdlingResource.decrement()
             }
-            EspressoIdlingResource.decrement()
         }
     }
 
