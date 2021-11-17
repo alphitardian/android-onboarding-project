@@ -68,6 +68,9 @@ class HomeScreenTest {
         val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
         composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
+        val homeContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
+        composeTestRule.onNode(hasTestTag(homeContentTag), true).assertIsDisplayed()
+
         val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
         composeTestRule.onNodeWithText(homeTitleTag, useUnmergedTree = true).assertIsDisplayed()
 
