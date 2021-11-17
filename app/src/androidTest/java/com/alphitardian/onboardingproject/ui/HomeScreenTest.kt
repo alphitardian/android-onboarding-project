@@ -38,19 +38,26 @@ class HomeScreenTest {
     }
 
     private fun getUserLoggedIn() {
-        val emailTag = composeTestRule.activity.getString(R.string.testtag_login_email)
-        composeTestRule.onNode(hasTestTag(emailTag), true)
-            .performClick()
-            .performTextInput("tester")
+        runBlocking {
+            val emailTag = composeTestRule.activity.getString(R.string.testtag_login_email)
+            composeTestRule.onNode(hasTestTag(emailTag), true)
+                .performClick()
+                .performTextInput("tester")
 
-        val passwordTag = composeTestRule.activity.getString(R.string.testtag_login_password)
-        composeTestRule.onNode(hasTestTag(passwordTag), true)
-            .performClick()
-            .performTextInput("tester123")
+            val passwordTag = composeTestRule.activity.getString(R.string.testtag_login_password)
+            composeTestRule.onNode(hasTestTag(passwordTag), true)
+                .performClick()
+                .performTextInput("tester123")
 
-        val buttonTag = composeTestRule.activity.getString(R.string.testtag_login_button)
-        composeTestRule.onNode(hasTestTag(buttonTag), true)
-            .performClick()
+            val buttonTag = composeTestRule.activity.getString(R.string.testtag_login_button)
+            composeTestRule.onNode(hasTestTag(buttonTag), true)
+                .performClick()
+
+            delay(1000)
+
+            val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
+            composeTestRule.onNode(hasText(homeTitleTag)).assertExists()
+        }
     }
 
     @Test
@@ -70,7 +77,6 @@ class HomeScreenTest {
     }
 
     @Test
-    @Ignore("Still have some issue for jacoco")
     fun testTopBarData() {
         runBlocking {
             val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
