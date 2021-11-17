@@ -69,31 +69,17 @@ class HomeScreenTest {
         composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
         val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-        composeTestRule.onNodeWithText(homeTitleTag, useUnmergedTree = true)
+        composeTestRule.onNodeWithText(homeTitleTag, useUnmergedTree = true).assertIsDisplayed()
 
         val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
-        composeTestRule.onNodeWithText(homeDescTag, useUnmergedTree = true)
+        composeTestRule.onNodeWithText(homeDescTag, useUnmergedTree = true).assertIsDisplayed()
     }
 
     private fun testTopBarData() {
         runBlocking {
-            val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
-            composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
-
-            val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
-            composeTestRule.onNode(hasTestTag(userFullNameTag), true)
-                .assertIsDisplayed()
-                .assert(hasText("Prapto Prawirodirjo"))
-
-            val userBioTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_bio)
-            composeTestRule.onNode(hasTestTag(userBioTag), true)
-                .assertIsDisplayed()
-                .assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
-
-            val userWebTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_web)
-            composeTestRule.onNode(hasTestTag(userWebTag), true)
-                .assertIsDisplayed()
-                .assert(hasText("https://icehousecorp.com"))
+            composeTestRule.onNodeWithText("Prapto Prawirodirjo", useUnmergedTree = true).assertIsDisplayed()
+            composeTestRule.onNodeWithText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8", useUnmergedTree = true).assertIsDisplayed()
+            composeTestRule.onNodeWithText("https://icehousecorp.com").assertIsDisplayed()
 
             delay(1000)
         }
