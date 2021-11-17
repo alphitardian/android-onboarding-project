@@ -62,7 +62,8 @@ class UserRepositoryImpl @Inject constructor(
                 news?.map {
                     localDataSource.insertNews(it)
                 }
-            } else {
+            }
+            if (news.isNullOrEmpty()) {
                 throw NullPointerException()
             }
         }
