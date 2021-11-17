@@ -94,12 +94,6 @@ class HomeScreenTest {
             val homeTag = composeTestRule.activity.getString(R.string.testtag_home_content)
             composeTestRule.onNode(hasTestTag(homeTag)).assertExists()
 
-            val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-            composeTestRule.onNode(hasTestTag(homeTitleTag)).assertExists()
-
-            val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
-            composeTestRule.onNode(hasTestTag(homeDescTag)).assertExists()
-
             val newsTitleTag = composeTestRule.activity.getString(R.string.testtag_home_news_title)
             composeTestRule.onAllNodesWithTag(newsTitleTag, true)
                 .onFirst()
