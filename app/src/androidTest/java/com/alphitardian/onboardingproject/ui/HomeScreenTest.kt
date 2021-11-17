@@ -32,6 +32,7 @@ class HomeScreenTest {
                 AppNavigation(startDestination = Destination.DESTINATION_LOGIN.name)
             }
         }
+        getUserLoggedIn()
     }
 
     @After
@@ -41,7 +42,7 @@ class HomeScreenTest {
 
     @Test
     fun testHomeScreen() {
-        getUserLoggedIn()
+        testInitialUiState()
         testTopBarData()
         testNewsContent()
         testScrollNewsContent()
@@ -61,6 +62,15 @@ class HomeScreenTest {
         val buttonTag = composeTestRule.activity.getString(R.string.testtag_login_button)
         composeTestRule.onNode(hasTestTag(buttonTag), true)
             .performClick()
+    }
+
+    private fun testInitialUiState() {
+        runBlocking {
+            val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
+            composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
+
+            delay(1000)
+        }
     }
 
     private fun testTopBarData() {
