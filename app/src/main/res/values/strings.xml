@@ -55,4 +55,5 @@
     <string name="testtag_home_news_comment">newsComments</string>
     <string name="testtag_home_news_like">newsLikes</string>
     <string name="testtag_home_news_dislike">newsDislikes</string>
+    <string name="testtag_home_content">homeScreenContent</string>
 </resources>

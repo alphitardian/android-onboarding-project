@@ -154,7 +154,7 @@ class LoginScreenTest {
 
         Thread.sleep(1000)
 
-        val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-        composeTestRule.onNode(hasText(homeTitleTag)).assertExists()
+        val homeTag = composeTestRule.activity.getString(R.string.testtag_home_content)
+        composeTestRule.onNode(hasTestTag(homeTag)).assertExists()
     }
 }

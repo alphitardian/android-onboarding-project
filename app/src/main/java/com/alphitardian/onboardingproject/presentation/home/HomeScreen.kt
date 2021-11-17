@@ -16,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alphitardian.onboardingproject.R
@@ -44,7 +45,8 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
             SnackbarHost(hostState = it) { data ->
                 Snackbar(snackbarData = data, backgroundColor = Color.DarkGray)
             }
-        }) {
+        }, modifier = Modifier.testTag(stringResource(R.string.testtag_home_content))
+        ) {
             Column {
                 when (val profileResource = profileState.value) {
                     is Resource.Success -> {

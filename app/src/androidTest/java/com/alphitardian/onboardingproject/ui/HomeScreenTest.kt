@@ -44,10 +44,8 @@ class HomeScreenTest {
 
     @Test
     fun testHomeScreen() {
-        testInitialUiState()
         testTopBarData()
         testNewsContent()
-        testScrollNewsContent()
     }
 
     private fun getUserLoggedIn() {
@@ -68,24 +66,9 @@ class HomeScreenTest {
 
             delay(1000)
 
-            val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-            composeTestRule.onNode(hasText(homeTitleTag)).assertExists()
+            val homeTag = composeTestRule.activity.getString(R.string.testtag_home_content)
+            composeTestRule.onNode(hasTestTag(homeTag)).assertExists()
         }
-    }
-
-    @Ignore("Still have some issue for jacoco")
-    fun testInitialUiState() {
-        val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
-        composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
-
-        val homeContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
-        composeTestRule.onNode(hasTestTag(homeContentTag), true).assertIsDisplayed()
-
-        val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-        composeTestRule.onNodeWithText(homeTitleTag, useUnmergedTree = true).assertIsDisplayed()
-
-        val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
-        composeTestRule.onNodeWithText(homeDescTag, useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Ignore("Still have some issue for jacoco")
@@ -157,19 +140,5 @@ class HomeScreenTest {
 
             delay(1000)
         }
-    }
-
-    fun testScrollNewsContent() {
-        Thread.sleep(1000)
-
-        val newsContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
-        composeTestRule.onNode(hasTestTag(newsContentTag))
-            .performGesture {
-                swipe(
-                    start = this.center,
-                    end = Offset(this.center.x, this.center.y - 1000),
-                    durationMillis = 1000
-                )
-            }
     }
 }
