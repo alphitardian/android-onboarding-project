@@ -62,7 +62,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                         NewsContent(news = newsResource.data)
                     }
                     is Resource.Loading -> {
-                        LoadingStateIndicator()
+                        NewsContent(news = null)
                     }
                     is Resource.Error -> {
                         Box(modifier = Modifier.fillMaxSize(),

@@ -70,6 +70,12 @@ class HomeScreenTest {
             composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
             delay(1000)
+
+            val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
+            composeTestRule.onNode(hasTestTag(homeTitleTag), true).assertIsDisplayed()
+
+            val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
+            composeTestRule.onNode(hasTestTag(homeDescTag), true).assertIsDisplayed()
         }
     }
 
