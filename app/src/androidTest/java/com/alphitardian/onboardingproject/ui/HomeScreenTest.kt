@@ -72,10 +72,23 @@ class HomeScreenTest {
     @Test
     fun testTopBarData() {
         runBlocking {
-            composeTestRule.onNodeWithText("Prapto Prawirodirjo", useUnmergedTree = true).assertIsDisplayed()
-            composeTestRule.onNodeWithText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8",
-                useUnmergedTree = true).assertIsDisplayed()
-            composeTestRule.onNodeWithText("https://icehousecorp.com").assertIsDisplayed()
+            val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
+            composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertIsDisplayed()
+
+            val userFullNameTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_fullname)
+            composeTestRule.onNode(hasTestTag(userFullNameTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("Prapto Prawirodirjo"))
+
+            val userBioTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_bio)
+            composeTestRule.onNode(hasTestTag(userBioTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("5 terlalu banyak, 10 kurang, lorem ipsum dolor si jamet \uD83C\uDFB8"))
+
+            val userWebTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_web)
+            composeTestRule.onNode(hasTestTag(userWebTag), true)
+                .assertIsDisplayed()
+                .assert(hasText("https://icehousecorp.com"))
 
             delay(1000)
         }
