@@ -3,11 +3,10 @@ name: CI
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  # TODO: change to main branch after all problem fixed
   push:
-    branches: [ main, bug-fix ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, bug-fix ]
+    branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
