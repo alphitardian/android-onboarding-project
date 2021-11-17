@@ -65,18 +65,14 @@ class HomeScreenTest {
     }
 
     private fun testInitialUiState() {
-        runBlocking {
-            val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
-            composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
+        val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
+        composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
-            delay(1000)
+        val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
+        composeTestRule.onNode(hasTestTag(homeTitleTag), true).assertExists()
 
-            val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-            composeTestRule.onNode(hasTestTag(homeTitleTag), true).assertIsDisplayed()
-
-            val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
-            composeTestRule.onNode(hasTestTag(homeDescTag), true).assertIsDisplayed()
-        }
+        val homeDescTag = composeTestRule.activity.getString(R.string.home_sub_title)
+        composeTestRule.onNode(hasTestTag(homeDescTag), true).assertExists()
     }
 
     private fun testTopBarData() {
