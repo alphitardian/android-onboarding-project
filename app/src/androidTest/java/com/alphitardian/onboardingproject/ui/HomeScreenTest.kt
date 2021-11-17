@@ -92,11 +92,6 @@ class HomeScreenTest {
 
     fun testNewsContent() {
         runBlocking {
-            val newsImageTag = composeTestRule.activity.getString(R.string.testtag_home_news_image)
-            composeTestRule.onAllNodes(hasTestTag(newsImageTag), true)
-                .onFirst()
-                .assertIsDisplayed()
-
             val newsTitleTag = composeTestRule.activity.getString(R.string.testtag_home_news_title)
             composeTestRule.onAllNodes(hasTestTag(newsTitleTag), true)
                 .onFirst()
