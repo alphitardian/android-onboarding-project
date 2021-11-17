@@ -40,6 +40,14 @@ class HomeScreenTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
     }
 
+    @Test
+    fun testHomeScreen() {
+        testInitialUiState()
+        testTopBarData()
+        testNewsContent()
+        testScrollNewsContent()
+    }
+
     private fun getUserLoggedIn() {
         val emailTag = composeTestRule.activity.getString(R.string.testtag_login_email)
         composeTestRule.onNode(hasTestTag(emailTag), true)
@@ -56,8 +64,7 @@ class HomeScreenTest {
             .performClick()
     }
 
-    @Test
-    fun testInitialUiState() {
+    private fun testInitialUiState() {
         val topBarTag = composeTestRule.activity.getString(R.string.testtag_home_topbar)
         composeTestRule.onNode(hasTestTag(topBarTag), true).assertIsDisplayed()
 
@@ -65,8 +72,7 @@ class HomeScreenTest {
         composeTestRule.onNode(hasTestTag(newsContentTag), true).assertIsDisplayed()
     }
 
-    @Test
-    fun testTopBarData() {
+    private fun testTopBarData() {
         runBlocking {
             val profilePictureTag = composeTestRule.activity.getString(R.string.testtag_home_topbar_profile_picture)
             composeTestRule.onNode(hasTestTag(profilePictureTag), true).assertExists()
@@ -90,8 +96,7 @@ class HomeScreenTest {
         }
     }
 
-    @Test
-    fun testNewsContent() {
+    private fun testNewsContent() {
         runBlocking {
             val newsImageTag = composeTestRule.activity.getString(R.string.testtag_home_news_image)
             composeTestRule.onAllNodes(hasTestTag(newsImageTag), true)
@@ -137,8 +142,7 @@ class HomeScreenTest {
         }
     }
 
-    @Test
-    fun testScrollNewsContent() {
+    private fun testScrollNewsContent() {
         Thread.sleep(1000)
 
         val newsContentTag = composeTestRule.activity.getString(R.string.testtag_home_news_content)
