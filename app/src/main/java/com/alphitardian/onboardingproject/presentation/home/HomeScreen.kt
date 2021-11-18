@@ -84,9 +84,7 @@ fun HomeScreen(navigate: () -> Unit, viewModel: HomeViewModel = hiltViewModel())
                             scaffoldState.snackbarHostState.showSnackbar(message = successMessage)
                         }
                     }
-                    is Resource.Loading -> {
-                        LoadingStateIndicator()
-                    }
+                    is Resource.Loading -> Unit
                     is Resource.Error -> {
                         val errorMessage = stringResource(id = R.string.home_snackbar_error_description)
                         coroutineScope.launch {
