@@ -21,4 +21,3 @@ keystore.properties
 /app/upload-keystore.jks
 /app/release
 gradle.properties
-/app/jacoco.exec

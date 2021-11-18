@@ -62,11 +62,12 @@ class HomeViewModel @Inject constructor(
                 mutableProfile.postValue(Resource.Loading())
                 val result = profileUseCase()
                 result?.let { mutableProfile.postValue(Resource.Success<UserEntity>(data = it)) }
+                EspressoIdlingResource.decrement()
             }.getOrElse {
                 val error = Resource.Error<UserEntity>(error = it, code = it.handleErrorCode())
                 mutableProfile.postValue(error)
+                EspressoIdlingResource.decrement()
             }
-            EspressoIdlingResource.decrement()
         }
     }
 
@@ -77,12 +78,13 @@ class HomeViewModel @Inject constructor(
                 mutableNews.postValue(Resource.Loading())
                 val result = newsUseCase()
                 result?.let { mutableNews.postValue(Resource.Success<List<NewsEntity>>(data = it)) }
+                EspressoIdlingResource.decrement()
             }.getOrElse {
                 val error =
                     Resource.Error<List<NewsEntity>>(error = it, code = it.handleErrorCode())
                 mutableNews.postValue(error)
+                EspressoIdlingResource.decrement()
             }
-            EspressoIdlingResource.decrement()
         }
     }
 
@@ -94,13 +96,14 @@ class HomeViewModel @Inject constructor(
                 val result = tokenUseCase()
                 mutableRefreshToken.postValue(Resource.Success<TokenResponse>(data = result))
                 dataStoreTransaction(result)
+                EspressoIdlingResource.decrement()
             }.getOrElse {
                 val error =
                     Resource.Error<TokenResponse>(error = it, code = it.handleErrorCode())
                 mutableRefreshToken.postValue(error)
                 isLoggedin.value = false
+                EspressoIdlingResource.decrement()
             }
-            EspressoIdlingResource.decrement()
         }
     }
 

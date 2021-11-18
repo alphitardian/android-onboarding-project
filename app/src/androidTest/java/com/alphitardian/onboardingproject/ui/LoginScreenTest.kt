@@ -152,7 +152,9 @@ class LoginScreenTest {
         val buttonTag = composeTestRule.activity.getString(R.string.testtag_login_button)
         composeTestRule.onNode(hasTestTag(buttonTag), true).performClick()
 
-        val homeTitleTag = composeTestRule.activity.getString(R.string.home_title)
-        composeTestRule.onNode(hasText(homeTitleTag)).assertExists()
+        Thread.sleep(1000)
+
+        val homeTag = composeTestRule.activity.getString(R.string.testtag_home_content)
+        composeTestRule.onNode(hasTestTag(homeTag)).assertExists()
     }
 }

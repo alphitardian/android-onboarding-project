@@ -5,6 +5,11 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 def keystoreProperties = new Properties()
@@ -52,7 +57,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard/retrofit.pro'
         }
         debug {
-            minifyEnabled false
+            testCoverageEnabled true
         }
     }
     compileOptions {
@@ -64,7 +69,17 @@ android {
         useIR = true
     }
     testOptions {
+        animationsDisabled true
         unitTests.includeAndroidResources = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = [
+                        'jdk.internal.*',
+                ]
+            }
+        }
+        unitTests.returnDefaultValues = true
     }
     buildFeatures {
         compose true
@@ -77,6 +92,49 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.from(files([mainSrc]))
+    classDirectories.from(files([debugTree]))
+    executionData.from = files([
+            "$project.projectDir/jacoco.exec",
+            fileTree(dir: project.buildDir, includes: [
+                    "outputs/code_coverage/debugAndroidTest/connected/**/*.ec"
+            ])
+    ])
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/*_Provide*/**',
+                    '**/*_Factory*/**',
+                    '**/*_MembersInjector.class',
+                    '**/Dagger*',
+                    '**/Hilt_*'
+            ])
+        }))
     }
 }
 

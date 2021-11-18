@@ -33,10 +33,14 @@ fun NewsContent(news: List<NewsEntity>?) {
                 style = TextStyle(fontSize = 18.sp,
                     fontWeight = FontWeight.W700,
                     color = MaterialTheme.colors.onBackground),
-                modifier = Modifier.padding(top = 29.dp))
+                modifier = Modifier
+                    .padding(top = 29.dp)
+                    .testTag(stringResource(id = R.string.home_title)))
             Text(text = stringResource(id = R.string.home_sub_title),
                 style = TextStyle(color = MaterialTheme.colors.onBackground),
-                modifier = Modifier.padding(bottom = 16.dp))
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .testTag(stringResource(id = R.string.home_sub_title)))
             if (news?.size == null) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = MaterialTheme.colors.onBackground)
